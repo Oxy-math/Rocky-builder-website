@@ -480,14 +480,23 @@
                 align-items: center;
                 justify-content: center;
                 box-shadow: 0 3px 10px rgba(255,107,53,0.5);
-                transition: transform 0.15s ease, opacity 0.3s ease, background 0.2s ease;
+                transition: transform 0.15s ease, opacity 0.25s ease, width 0.25s ease, background 0.2s ease;
                 z-index: 4;
                 padding: 0;
                 line-height: 1;
             }
             .tabs-arrow:active { transform: scale(0.9); }
             .tabs-arrow:hover  { background: #e5561e; }
-            .tabs-arrow.hidden { opacity: 0; pointer-events: none; }
+            .tabs-arrow.hidden {
+                opacity: 0;
+                pointer-events: none;
+                width: 0;
+                min-width: 0;
+                overflow: hidden;
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+            }
             .tabs-arrow-left   { animation: nudgeLeft 1s ease-in-out infinite; }
             .tabs-arrow-right  { animation: nudgeRight 1s ease-in-out infinite; }
             @keyframes nudgeRight {
