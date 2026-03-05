@@ -464,11 +464,46 @@
             .asset-grid {
                 grid-template-columns: repeat(4, minmax(0, 1fr));
                 gap: 6px;
-                max-height: 240px;
+                /* Affiche ~2.3 rangées pour montrer qu'il y a plus de contenu */
+                max-height: 195px;
                 padding-right: 0;
+                /* Scrollbar toujours visible sur mobile */
+                overflow-y: scroll;
+                -webkit-overflow-scrolling: touch;
             }
 
-            /* Sur mobile : juste un border-radius plus petit, tout le reste hérité */
+            /* Scrollbar visible sur mobile (webkit) */
+            .asset-grid::-webkit-scrollbar {
+                width: 4px;
+                display: block;
+            }
+            .asset-grid::-webkit-scrollbar-track {
+                background: #f0e8e0;
+                border-radius: 4px;
+            }
+            .asset-grid::-webkit-scrollbar-thumb {
+                background: var(--primary);
+                border-radius: 4px;
+            }
+
+            /* Indicateur "voir plus" en bas de la grille */
+            .asset-grid-wrapper {
+                position: relative;
+            }
+            .asset-grid-fade {
+                display: block;
+                position: absolute;
+                bottom: 0; left: 0; right: 4px;
+                height: 36px;
+                background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.95));
+                pointer-events: none;
+                border-radius: 0 0 8px 8px;
+                z-index: 3;
+                transition: opacity 0.3s ease;
+            }
+            .asset-grid-fade.hidden { opacity: 0; }
+
+            /* Sur mobile : border-radius plus petit */
             .asset-item {
                 border-radius: 8px;
             }
@@ -563,7 +598,10 @@
                 <div class="panel">
                     <h2 class="panel-title">Customize Rocky</h2>
                     <div class="category-tabs" id="categoryTabs"></div>
-                    <div class="asset-grid" id="assetGrid"></div>
+                    <div class="asset-grid-wrapper">
+                        <div class="asset-grid" id="assetGrid"></div>
+                        <div class="asset-grid-fade" id="assetGridFade"></div>
+                    </div>
 
                     <div class="nickname-section">
                         <label class="nickname-label" for="nicknameInput">Enter your nickname</label>
@@ -1016,11 +1054,33 @@
         setTimeout(positionOverlay, 1200);
 
         // ============================================================
+        // SCROLL FADE INDICATOR (mobile)
+        // ============================================================
+        function updateScrollFade() {
+            const grid = document.getElementById('assetGrid');
+            const fade = document.getElementById('assetGridFade');
+            if (!fade || !grid) return;
+            // Cacher le fade si on est tout en bas
+            const atBottom = grid.scrollTop + grid.clientHeight >= grid.scrollHeight - 4;
+            fade.classList.toggle('hidden', atBottom);
+        }
+
+        document.getElementById('assetGrid').addEventListener('scroll', updateScrollFade, { passive: true });
+
+        // Recalculer après chaque changement de catégorie
+        const _origLoadAssetGrid = loadAssetGrid;
+        loadAssetGrid = function() {
+            _origLoadAssetGrid();
+            setTimeout(updateScrollFade, 50);
+        };
+
+        // ============================================================
         // INIT
         // ============================================================
         loadCategoryTabs();
         loadAssetGrid();
         loadRockyFromURL(DEFAULT_ROCKY_URL);
+        setTimeout(updateScrollFade, 100);
     </script>
 </body>
 </html>
