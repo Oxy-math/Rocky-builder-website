@@ -868,7 +868,7 @@
             }, 
             () => {
                 console.error('❌ Failed to load Rocky image:', label);
-            });
+            }, { crossOrigin: 'anonymous' });
         }
 
         // --------------------------------------------------------------
@@ -1011,7 +1011,7 @@
                 }
             }, (err) => {
                 console.error('❌ Error loading background:', bgAsset.imageUrl, err);
-            });
+            }, { crossOrigin: 'anonymous' });
         }
 
         function addAssetToCanvas(asset) {
@@ -1047,7 +1047,7 @@
             (err) => {
                 console.error('❌ Error loading image:', asset.imageUrl, err);
                 alert(`Failed to load image: ${asset.name}\nCheck that the file exists in the correct location.`);
-            });
+            }, { crossOrigin: 'anonymous' });
         }
 
         // --------------------------------------------------------------
