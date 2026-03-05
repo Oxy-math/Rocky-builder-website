@@ -45,7 +45,7 @@
         .category-tab:hover { border-color: var(--secondary); background: var(--light); }
         .category-tab.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-color: transparent; }
         /* Fleches tabs : cachees sur desktop */
-        .tabs-arrow { display: none; }
+        .tabs-arrow { display: none !important; }
         .asset-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-height: 500px; overflow-y: auto; overflow-x: hidden; padding-right: 6px; width: 100%; box-sizing: border-box; }
         .asset-grid::-webkit-scrollbar { width: 8px; }
         .asset-grid::-webkit-scrollbar-track { background: var(--light); border-radius: 10px; }
@@ -101,7 +101,7 @@
             .category-tabs { flex: 1; display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 6px; margin-bottom: 0; padding-bottom: 2px; -webkit-overflow-scrolling: touch; scrollbar-width: none; scroll-behavior: smooth; }
             .category-tabs::-webkit-scrollbar { display: none; }
             /* Fleches visibles sur mobile */
-            .tabs-arrow { display: flex; flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--primary); color: white; font-size: 1.1rem; font-weight: 900; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(255,107,53,0.5); transition: transform 0.15s ease, opacity 0.25s ease, width 0.25s ease, background 0.2s ease; z-index: 4; padding: 0; line-height: 1; }
+            .tabs-arrow { display: flex !important; flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--primary); color: white; font-size: 1.1rem; font-weight: 900; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(255,107,53,0.5); transition: transform 0.15s ease, opacity 0.25s ease, width 0.25s ease, background 0.2s ease; z-index: 4; padding: 0; line-height: 1; }
             .tabs-arrow:hover { background: #e5561e; }
             .tabs-arrow.hidden { opacity: 0; pointer-events: none; width: 0; min-width: 0; overflow: hidden; margin: 0; padding: 0; box-shadow: none; }
             .tabs-arrow-right { animation: nudgeRight 1s ease-in-out infinite; }
@@ -346,7 +346,9 @@
             canvas.getElement().toBlob(async (blob) => {
                 if (!blob) return;
                 const file = new File([blob], 'my-rocky.png', { type: 'image/png' });
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                // Web Share API uniquement sur mobile/touch (évite la popup Windows sur desktop)
+                const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+                if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
                     try { await navigator.share({ title: 'Rocky Builder', text: TWEET_TEXT, files: [file] }); return; }
                     catch (e) { if (e.name === 'AbortError') return; }
                 }
