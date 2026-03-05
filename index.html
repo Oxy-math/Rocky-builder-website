@@ -7,12 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@900&family=Fredoka:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* ===== STYLES DE BASE ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* ===== BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --primary: #FF6B35;
@@ -24,7 +20,8 @@
 
         body {
             font-family: 'DM Sans', sans-serif;
-            background: url('https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Background_site.png') center center / cover fixed, linear-gradient(135deg, #FFF8F0 0%, #FFE5D9 100%);
+            background: url('https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Background_site.png') center center / cover fixed,
+                        linear-gradient(135deg, #FFF8F0 0%, #FFE5D9 100%);
             min-height: 100vh;
             padding: 20px 20px 20px 76px;
             color: #2D3142;
@@ -41,20 +38,17 @@
             align-items: center;
             gap: 12px;
             z-index: 100;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255,255,255,0.85);
             backdrop-filter: blur(8px);
             border-radius: 50px;
             padding: 14px 10px;
-            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.15);
-            border: 1px solid rgba(255, 107, 53, 0.15);
+            box-shadow: 0 4px 20px rgba(255,107,53,0.15);
+            border: 1px solid rgba(255,107,53,0.15);
         }
 
         .left-sidebar a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px;
             border-radius: 50%;
             background: var(--light);
             color: var(--primary);
@@ -62,31 +56,12 @@
             transition: all 0.2s ease;
             font-size: 1.1rem;
         }
+        .left-sidebar a:hover { background: var(--primary); color: white; transform: scale(1.15); box-shadow: 0 4px 12px var(--shadow); }
+        .left-sidebar a svg { width: 18px; height: 18px; fill: currentColor; }
+        .left-sidebar-divider { width: 24px; height: 1px; background: rgba(255,107,53,0.2); border-radius: 1px; }
 
-        .left-sidebar a:hover {
-            background: var(--primary);
-            color: white;
-            transform: scale(1.15);
-            box-shadow: 0 4px 12px var(--shadow);
-        }
-
-        .left-sidebar a svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-        }
-
-        .left-sidebar-divider {
-            width: 24px;
-            height: 1px;
-            background: rgba(255, 107, 53, 0.2);
-            border-radius: 1px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        /* ===== LAYOUT ===== */
+        .container { max-width: 1400px; margin: 0 auto; }
 
         header {
             text-align: center;
@@ -96,7 +71,7 @@
 
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         h1 {
@@ -104,17 +79,12 @@
             font-size: 4.2rem;
             font-weight: 900;
             color: #1a1a1a;
-            text-shadow: 3px 3px 0 rgba(253, 197, 0, 0.6), 5px 5px 0 rgba(247, 147, 30, 0.3);
+            text-shadow: 3px 3px 0 rgba(253,197,0,0.6), 5px 5px 0 rgba(247,147,30,0.3);
             margin-bottom: 10px;
             letter-spacing: -0.5px;
         }
 
-        .tagline {
-            font-size: 1.3rem;
-            color: #2D3142;
-            opacity: 0.8;
-            font-weight: 700;
-        }
+        .tagline { font-size: 1.3rem; color: #2D3142; opacity: 0.8; font-weight: 700; }
 
         .workspace {
             display: grid;
@@ -125,9 +95,10 @@
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
+        /* ===== CANVAS AREA ===== */
         .canvas-container {
             background: white;
             border-radius: 24px;
@@ -139,17 +110,6 @@
             position: relative;
         }
 
-        .canvas-container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 107, 53, 0.03) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
         .canvas-wrapper {
             position: relative;
             display: flex;
@@ -157,8 +117,8 @@
             align-items: center;
             justify-content: center;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            background: 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background:
                 linear-gradient(45deg, #ccc 25%, transparent 25%),
                 linear-gradient(-45deg, #ccc 25%, transparent 25%),
                 linear-gradient(45deg, transparent 75%, #ccc 75%),
@@ -166,13 +126,12 @@
             background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
             background-color: #f5f5f5;
+            overflow: hidden;
         }
 
-        #canvas {
-            border-radius: 16px;
-            display: block;
-        }
+        #canvas { border-radius: 16px; display: block; }
 
+        /* ===== BUTTONS ===== */
         .controls {
             display: flex;
             gap: 12px;
@@ -189,7 +148,7 @@
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             position: relative;
             overflow: hidden;
         }
@@ -197,95 +156,48 @@
         .btn::before {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
+            top: 50%; left: 50%;
+            width: 0; height: 0;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255,255,255,0.3);
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
+        .btn:hover::before { width: 300px; height: 300px; }
+        .btn:active { transform: scale(0.95); }
 
-        .btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
+        .btn-primary:hover { box-shadow: 0 6px 25px var(--shadow); transform: translateY(-2px); }
 
-        .btn:active {
-            transform: scale(0.95);
-        }
+        .btn-danger { background: #E63946; color: white; }
+        .btn-danger:hover { background: #D62828; box-shadow: 0 6px 25px rgba(230,57,70,0.3); transform: translateY(-2px); }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-        }
+        .btn-secondary { background: linear-gradient(135deg, #FDC500, #F7931E); color: white; }
+        .btn-secondary:hover { background: linear-gradient(135deg, #F7931E, #FF6B35); box-shadow: 0 6px 25px rgba(247,147,30,0.35); transform: translateY(-2px); }
 
-        .btn-primary:hover {
-            box-shadow: 0 6px 25px var(--shadow);
-            transform: translateY(-2px);
-        }
+        .btn-share { background: #000000; color: white; }
+        .btn-share:hover { background: #1a1a1a; box-shadow: 0 6px 25px rgba(0,0,0,0.3); transform: translateY(-2px); }
 
-        .btn-danger {
-            background: #E63946;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #D62828;
-            box-shadow: 0 6px 25px rgba(230, 57, 70, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #FDC500, #F7931E);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: linear-gradient(135deg, #F7931E, #FF6B35);
-            box-shadow: 0 6px 25px rgba(247, 147, 30, 0.35);
-            transform: translateY(-2px);
-        }
-
-        .btn-share {
-            background: #000000;
-            color: white;
-        }
-
-        .btn-share:hover {
-            background: #1a1a1a;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        /* ===== SIDEBAR / PANEL ===== */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
 
         .panel {
             background: white;
             border-radius: 20px;
             padding: 24px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
             animation: slideLeft 0.8s ease-out 0.4s both;
+            overflow: hidden;
         }
 
         @keyframes slideLeft {
             from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
+            to   { opacity: 1; transform: translateX(0); }
         }
 
-        .panel-title {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.4rem;
-            color: var(--primary);
-            margin-bottom: 16px;
-            font-weight: 700;
-        }
+        .panel-title { font-family: 'Fredoka', sans-serif; font-size: 1.4rem; color: var(--primary); margin-bottom: 16px; font-weight: 700; }
 
+        /* ===== TABS ===== */
         .category-tabs {
             display: flex;
             gap: 8px;
@@ -304,51 +216,34 @@
             transition: all 0.3s ease;
             color: #2D3142;
         }
+        .category-tab:hover { border-color: var(--secondary); background: var(--light); }
+        .category-tab.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-color: transparent; }
 
-        .category-tab:hover {
-            border-color: var(--secondary);
-            background: var(--light);
-        }
-
-        .category-tab.active {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border-color: transparent;
-        }
-
-        /* ===== GRILLE ===== */
+        /* ===== ASSET GRID ===== */
         .asset-grid {
             display: grid;
-            grid-template-columns: repeat(3, 85px);
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             max-height: 500px;
             overflow-y: auto;
             overflow-x: hidden;
             padding-right: 6px;
+            /* Empêche tout débordement hors du panel */
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        .asset-grid[data-category="flags"] {
-            grid-template-columns: repeat(3, 85px);
-            gap: 10px;
-        }
+        .asset-grid::-webkit-scrollbar { width: 8px; }
+        .asset-grid::-webkit-scrollbar-track { background: var(--light); border-radius: 10px; }
+        .asset-grid::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
 
-        .asset-grid::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .asset-grid::-webkit-scrollbar-track {
-            background: var(--light);
-            border-radius: 10px;
-        }
-
-        .asset-grid::-webkit-scrollbar-thumb {
-            background: var(--secondary);
-            border-radius: 10px;
-        }
-
+        /* ===== ASSET ITEM ===== */
+        /* Technique robuste : wrapper relatif avec padding-bottom trick */
         .asset-item {
-            width: 85px;
-            height: 85px;
+            position: relative;
+            width: 100%;
+            /* padding-bottom = 100% de la largeur => carré garanti */
+            padding-bottom: 100%;
             background: white;
             border-radius: 12px;
             cursor: pointer;
@@ -356,17 +251,15 @@
             border: 2px solid #ddd;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            position: relative;
-            display: block;
-            flex-shrink: 0;
+            box-sizing: border-box;
         }
 
+        /* Tout le contenu est en absolute pour remplir l'espace créé par padding-bottom */
         .asset-item img {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 85px;
-            height: 85px;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
             pointer-events: none;
             display: block;
@@ -382,23 +275,13 @@
             z-index: 1;
             pointer-events: none;
         }
-
-        .asset-item:hover {
-            border-color: var(--primary);
-            box-shadow: 0 4px 16px var(--shadow);
-            outline: 2px solid var(--primary);
-        }
-
-        .asset-item:hover::before {
-            opacity: 0.08;
-        }
+        .asset-item:hover { border-color: var(--primary); box-shadow: 0 4px 16px var(--shadow); outline: 2px solid var(--primary); }
+        .asset-item:hover::before { opacity: 0.08; }
 
         .asset-name {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(45, 49, 66, 0.9);
+            bottom: 0; left: 0; right: 0;
+            background: rgba(45,49,66,0.9);
             color: white;
             font-size: 0.6rem;
             padding: 4px;
@@ -409,11 +292,9 @@
             font-weight: 500;
             pointer-events: none;
         }
+        .asset-item:hover .asset-name { opacity: 1; }
 
-        .asset-item:hover .asset-name {
-            opacity: 1;
-        }
-
+        /* ===== INSTRUCTIONS ===== */
         .instructions {
             background: linear-gradient(135deg, #FFF8F0, #FFE5D9);
             border-left: 4px solid var(--primary);
@@ -422,33 +303,46 @@
             font-size: 0.9rem;
             line-height: 1.6;
         }
+        .instructions strong { color: var(--primary); font-weight: 700; }
 
-        .instructions strong {
-            color: var(--primary);
-            font-weight: 700;
+        /* ===== NICKNAME ===== */
+        .nickname-section {
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 2px solid var(--light);
         }
-
-        .info-badge {
-            display: inline-block;
-            background: var(--accent);
+        .nickname-label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+        .nickname-row { display: flex; gap: 8px; }
+        .nickname-input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s ease;
             color: #2D3142;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-bottom: 12px;
         }
+        .nickname-input:focus { border-color: var(--primary); }
+        .nickname-btn { padding: 10px 18px; font-size: 0.9rem; white-space: nowrap; }
+
+        /* ===== OVERLAY ===== */
+        .site-overlay {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            display: block;
+            transform-origin: top left;
+        }
+
+        /* ===== MOBILE SOCIAL (hidden on desktop) ===== */
+        .mobile-social { display: none; }
 
         /* ===== TABLET ===== */
         @media (max-width: 1024px) {
-            .workspace {
-                grid-template-columns: 1fr;
-            }
+            .workspace { grid-template-columns: 1fr; }
             h1 { font-size: 2.5rem; }
-            .asset-grid {
-                grid-template-columns: repeat(4, 85px);
-                max-height: 300px;
-            }
         }
 
         /* ===== MOBILE ===== */
@@ -459,11 +353,9 @@
                 overflow-x: hidden;
             }
 
-            .container {
-                padding: 0;
-            }
+            .container { padding: 0; }
 
-            /* Header centré */
+            /* Header */
             header {
                 padding: 14px 16px 10px;
                 margin-bottom: 0;
@@ -487,15 +379,11 @@
                 vertical-align: middle !important;
             }
 
-            .tagline {
-                font-size: 0.85rem;
-                margin-bottom: 0;
-                text-align: center;
-            }
+            .tagline { font-size: 0.85rem; margin-bottom: 0; text-align: center; }
 
-            /* Masquer sidebar gauche et overlay */
+            /* Cacher sidebar gauche et overlay décoratif */
             .left-sidebar { display: none; }
-            .site-overlay { display: none; }
+            .site-overlay  { display: none; }
 
             /* Workspace vertical */
             .workspace {
@@ -505,7 +393,7 @@
                 padding: 0;
             }
 
-            /* Canvas section */
+            /* Canvas */
             .canvas-container {
                 border-radius: 0;
                 padding: 8px;
@@ -520,15 +408,6 @@
                 overflow: hidden;
             }
 
-            /* Force le canvas Fabric à prendre toute la largeur */
-            .canvas-wrapper > canvas,
-            .canvas-wrapper .lower-canvas,
-            .canvas-wrapper .upper-canvas {
-                width: 100% !important;
-                height: auto !important;
-                display: block !important;
-            }
-
             /* Boutons : 2 par ligne */
             .controls {
                 display: grid;
@@ -538,7 +417,7 @@
             }
 
             .btn {
-                font-size: 0.8rem;
+                font-size: 0.78rem;
                 padding: 10px 6px;
                 border-radius: 10px;
                 text-align: center;
@@ -546,20 +425,17 @@
             }
 
             /* Sidebar */
-            .sidebar {
-                padding: 8px 8px 16px;
-            }
+            .sidebar { padding: 8px 8px 16px; }
 
             .sidebar .panel {
                 border-radius: 12px;
                 padding: 12px;
                 margin-bottom: 8px;
+                /* Empêche tout débordement */
+                overflow: hidden;
             }
 
-            .panel-title {
-                font-size: 1rem;
-                margin-bottom: 8px;
-            }
+            .panel-title { font-size: 1rem; margin-bottom: 8px; }
 
             /* Tabs scrollables horizontalement */
             .category-tabs {
@@ -572,7 +448,6 @@
                 scrollbar-width: none;
                 margin-bottom: 10px;
             }
-
             .category-tabs::-webkit-scrollbar { display: none; }
 
             .category-tab {
@@ -582,29 +457,17 @@
                 flex-shrink: 0;
             }
 
-            /* Grille assets — cellules carrées auto-sizing */
+            /* ===== GRILLE ASSETS MOBILE ===== */
             .asset-grid {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns: repeat(4, minmax(0, 1fr));
                 gap: 6px;
-                max-height: 230px;
+                max-height: 240px;
                 padding-right: 0;
             }
 
+            /* Sur mobile : juste un border-radius plus petit, tout le reste hérité */
             .asset-item {
-                width: 100% !important;
-                height: 0 !important;
-                padding-bottom: 100% !important; /* force carré */
-                position: relative;
-            }
-
-            .asset-item img {
-                position: absolute !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-                object-fit: contain;
+                border-radius: 8px;
             }
 
             /* Nickname */
@@ -613,160 +476,92 @@
             .nickname-input { font-size: 0.82rem; padding: 8px 12px; }
             .nickname-btn { padding: 8px 14px; font-size: 0.82rem; }
 
-            /* Cacher instructions */
+            /* Masquer les instructions */
             .instructions { display: none; }
 
-            /* Social bar */
-            .mobile-social { display: flex !important; }
-        }
+            /* Social bar mobile */
+            .mobile-social {
+                display: flex;
+                justify-content: center;
+                gap: 16px;
+                padding: 14px;
+                background: rgba(255,255,255,0.85);
+                backdrop-filter: blur(8px);
+                margin: 0 12px 20px;
+                border-radius: 50px;
+                box-shadow: 0 4px 20px rgba(255,107,53,0.15);
+            }
 
-        /* Barre sociale mobile */
-        .mobile-social {
-            display: none;
-            justify-content: center;
-            gap: 16px;
-            padding: 14px;
-            background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(8px);
-            margin: 0 12px 20px;
-            border-radius: 50px;
-            box-shadow: 0 4px 20px rgba(255,107,53,0.15);
-        }
+            .mobile-social a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px; height: 40px;
+                border-radius: 50%;
+                background: var(--light);
+                color: var(--primary);
+                text-decoration: none;
+                transition: all 0.2s ease;
+            }
 
-        .mobile-social a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--light);
-            color: var(--primary);
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .mobile-social a svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        .mobile-social a:hover {
-            background: var(--primary);
-            color: white;
-        }
-        /* ===== NICKNAME ===== */
-        .nickname-section {
-            margin-top: 18px;
-            padding-top: 16px;
-            border-top: 2px solid var(--light);
-        }
-
-        .nickname-label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        .nickname-row {
-            display: flex;
-            gap: 8px;
-        }
-
-        .nickname-input {
-            flex: 1;
-            padding: 10px 14px;
-            border: 2px solid #ddd;
-            border-radius: 50px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.9rem;
-            outline: none;
-            transition: border-color 0.2s ease;
-            color: #2D3142;
-        }
-
-        .nickname-input:focus {
-            border-color: var(--primary);
-        }
-
-        .nickname-btn {
-            padding: 10px 18px;
-            font-size: 0.9rem;
-            white-space: nowrap;
-        }
-
-        /* ===== OVERLAY IMAGE (background site rocky.png) ===== */
-        .site-overlay {
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            display: block;
-            transform-origin: top left;
+            .mobile-social a svg { width: 20px; height: 20px; fill: currentColor; }
+            .mobile-social a:hover { background: var(--primary); color: white; }
         }
     </style>
 </head>
 <body>
+
+    <!-- Overlay décoratif (desktop uniquement) -->
+    <img src="https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Background site Rocky.png"
+         id="siteOverlay" class="site-overlay" aria-hidden="true" alt="">
+
     <!-- LEFT SIDEBAR -->
-    <img src="https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Background site Rocky.png" id="siteOverlay" class="site-overlay" aria-hidden="true" alt="">
     <div class="left-sidebar">
-        <!-- X / Twitter -->
         <a href="https://x.com/SeismicSys" target="_blank" title="Follow on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
         </a>
         <div class="left-sidebar-divider"></div>
-        <!-- Seismic Website -->
         <a href="https://www.seismic.systems/" target="_blank" title="Seismic Systems">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
         </a>
         <div class="left-sidebar-divider"></div>
-        <!-- Discord -->
         <a href="https://discord.com/invite/seismic" target="_blank" title="Join Discord">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.031.053a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.031.053a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
         </a>
     </div>
 
     <div class="container">
         <header>
-            <h1><img src="https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Head.png" alt="Rocky" style="height:0.85em; vertical-align:middle; margin-right:12px; display:inline-block;">Rocky Builder</h1>
+            <h1>
+                <img src="https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Head.png"
+                     alt="Rocky" style="height:0.85em; vertical-align:middle; margin-right:12px; display:inline-block;">
+                Rocky Builder
+            </h1>
             <p class="tagline"><strong>Customize your Rocky and share it with the world!</strong></p>
         </header>
 
         <div class="workspace">
+            <!-- Canvas -->
             <div class="canvas-container">
                 <div class="canvas-wrapper">
                     <canvas id="canvas"></canvas>
                 </div>
                 <div class="controls">
-                    <button class="btn btn-primary" id="downloadBtn">
-                        📥 Download
-                    </button>
-                    <button class="btn btn-share" id="shareBtn">
-                        𝕏 Share on X
-                    </button>
-                    <button class="btn btn-primary" id="clearBtn">
-                        ↺ Clear All
-                    </button>
-                    <button class="btn btn-secondary" id="bringForwardBtn">
-                        ⬆️ Bring Forward
-                    </button>
-                    <button class="btn btn-secondary" id="sendBackwardBtn">
-                        ⬇️ Send Backward
-                    </button>
+                    <button class="btn btn-primary" id="downloadBtn">📥 Download</button>
+                    <button class="btn btn-share"   id="shareBtn">𝕏 Share on X</button>
+                    <button class="btn btn-primary" id="clearBtn">↺ Clear All</button>
+                    <button class="btn btn-secondary" id="bringForwardBtn">⬆️ Bring Forward</button>
+                    <button class="btn btn-secondary" id="sendBackwardBtn">⬇️ Send Backward</button>
                 </div>
             </div>
 
+            <!-- Sidebar -->
             <div class="sidebar">
                 <div class="panel">
                     <h2 class="panel-title">Customize Rocky</h2>
-                    
                     <div class="category-tabs" id="categoryTabs"></div>
-                    
                     <div class="asset-grid" id="assetGrid"></div>
 
-                    <!-- NICKNAME -->
                     <div class="nickname-section">
                         <label class="nickname-label" for="nicknameInput">Enter your nickname</label>
                         <div class="nickname-row">
@@ -790,21 +585,21 @@
         <!-- Liens sociaux visibles uniquement sur mobile -->
         <div class="mobile-social">
             <a href="https://x.com/SeismicSys" target="_blank" title="Follow on X">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             </a>
             <a href="https://www.seismic.systems/" target="_blank" title="Seismic Systems">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
             </a>
             <a href="https://discord.com/invite/seismic" target="_blank" title="Join Discord">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.031.053a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.031.053a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
             </a>
         </div>
     </div>
 
     <script>
-        // --------------------------------------------------------------
-        // CANVAS CONFIGURATION
-        // --------------------------------------------------------------
+        // ============================================================
+        // CONFIG
+        // ============================================================
         const CANVAS_SIZE = 1024;
         const canvas = new fabric.Canvas('canvas', {
             width: CANVAS_SIZE,
@@ -812,248 +607,68 @@
             preserveObjectStacking: true
         });
 
-        let baseImage = null;
+        let baseImage   = null;
         let currentCategory = 'backgrounds';
-        let nicknameObj = null;  // Fabric text object for the nickname
+        let nicknameObj = null;
 
-        // --------------------------------------------------------------
-        // ASSETS : ALL CATEGORIES WITH LOCAL IMAGES
-        // --------------------------------------------------------------
+        // ============================================================
+        // ASSETS
+        // ============================================================
         const ASSETS = {
-            backgrounds: [
-                { name: 'Background 1', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background1.png' },
-                { name: 'Background 2', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background2.png' },
-                { name: 'Background 3', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background3.png' },
-                { name: 'Background 4', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background4.png' },
-                { name: 'Background 5', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background5.png' },
-                { name: 'Background 6', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background6.png' },
-                { name: 'Background 7', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background7.png' },
-                { name: 'Background 8', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background8.png' },
-                { name: 'Background 9', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background9.png' },
-                { name: 'Background 10', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background10.png' },
-                { name: 'Background 11', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background11.png' },
-                { name: 'Background 12', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background12.png' },
-                { name: 'Background 13', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background13.png' },
-                { name: 'Background 14', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background14.png' },
-                { name: 'Background 15', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background15.png' },
-                { name: 'Background 16', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background16.png' },
-                { name: 'Background 17', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background17.png' },
-                { name: 'Background 18', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background18.png' },
-                { name: 'Background 19', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background19.png' },
-                { name: 'Background 20', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background20.png' },
-                { name: 'Background 21', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background21.png' },
-                { name: 'Background 22', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background22.png' },
-                { name: 'Background 23', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background23.png' },
-                { name: 'Background 24', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background24.png' },
-                { name: 'Background 25', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background25.png' },
-                { name: 'Background 26', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background26.png' },
-                { name: 'Background 27', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background27.png' },
-                { name: 'Background 28', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background28.png' },
-                { name: 'Background 29', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background29.png' },
-                { name: 'Background 30', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background30.png' },
-                { name: 'Background 31', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background31.png' },
-                { name: 'Background 32', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background32.png' },
-                { name: 'Background 33', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background33.png' },
-                { name: 'Background 34', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background34.png' },
-                { name: 'Background 35', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background35.png' },
-                { name: 'Background 36', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background36.png' },
-                { name: 'Background 37', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background37.png' },
-                { name: 'Background 38', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background38.png' },
-                { name: 'Background 39', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background39.png' },
-                { name: 'Background 40', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background40.png' },
-                { name: 'Background 41', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background41.png' },
-                { name: 'Background 42', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background42.png' },
-                { name: 'Background 43', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background43.png' },
-                { name: 'Background 44', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background44.png' },
-                { name: 'Background 45', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background45.png' },
-                { name: 'Background 46', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background46.png' },
-                { name: 'Background 47', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background47.png' },
-                { name: 'Background 48', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background48.png' },
-                { name: 'Background 49', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background49.png' },
-                { name: 'Background 50', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background50.png' },
-                { name: 'Background 51', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background51.png' },
-                { name: 'Background 52', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background52.png' },
-                { name: 'Background 53', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background53.png' },
-                { name: 'Background 54', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background54.png' },
-                { name: 'Background 55', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background55.png' }
-            ],
-
-            hair: [
-                { name: 'Haircut 1', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 1.png' },
-                { name: 'Haircut 2', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 2.png' },
-                { name: 'Haircut 3', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 3.png' },
-                { name: 'Haircut 4', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 4.png' },
-                { name: 'Haircut 5', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 5.png' },
-                { name: 'Haircut 6', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 6.png' },
-                { name: 'Haircut 7', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 7.png' },
-                { name: 'Haircut 8', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 8.png' },
-                { name: 'Haircut 9', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 9.png' },
-                { name: 'Haircut 10', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 10.png' },
-                { name: 'Haircut 11', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 11.png' },
-                { name: 'Haircut 12', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 12.png' },
-                { name: 'Haircut 13', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 13.png' },
-                { name: 'Haircut 14', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 14.png' },
-                { name: 'Haircut 15', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 15.png' },
-                { name: 'Haircut 16', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 16.png' },
-                { name: 'Haircut 17', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 17.png' },
-                { name: 'Haircut 18', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 18.png' },
-                { name: 'Haircut 19', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 19.png' },
-                { name: 'Haircut 20', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 20.png' },
-                { name: 'Haircut 21', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 21.png' },
-                { name: 'Haircut 22', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 22.png' },
-                { name: 'Haircut 23', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 23.png' },
-                { name: 'Haircut 24', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 24.png' },
-                { name: 'Haircut 25', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 25.png' },
-                { name: 'Haircut 26', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 26.png' },
-                { name: 'Haircut 27', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 27.png' },
-                { name: 'Haircut 28', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 28.png' },
-                { name: 'Haircut 29', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 29.png' },
-                { name: 'Haircut 30', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut 30.png' }
-            ],
-
-            eyes: [
-                { name: 'Eyes 1', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 1.png' },
-                { name: 'Eyes 2', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 2.png' },
-                { name: 'Eyes 3', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 3.png' },
-                { name: 'Eyes 4', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 4.png' },
-                { name: 'Eyes 5', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 5.png' },
-                { name: 'Eyes 6', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 6.png' },
-                { name: 'Eyes 7', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 7.png' },
-                { name: 'Eyes 8', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 8.png' },
-                { name: 'Eyes 9', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 9.png' },
-                { name: 'Eyes 10', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 10.png' },
-                { name: 'Eyes 11', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 11.png' },
-                { name: 'Eyes 12', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 12.png' },
-                { name: 'Eyes 13', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 13.png' },
-                { name: 'Eyes 14', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 14.png' },
-                { name: 'Eyes 15', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 15.png' },
-                { name: 'Eyes 16', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 16.png' },
-                { name: 'Eyes 17', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 17.png' },
-                { name: 'Eyes 18', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 18.png' },
-                { name: 'Eyes 19', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 19.png' },
-                { name: 'Eyes 20', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes 20.png' }
-            ],
-
-            mouth: [
-                { name: 'Mouth 1', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 1.png' },
-                { name: 'Mouth 2', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 2.png' },
-                { name: 'Mouth 3', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 3.png' },
-                { name: 'Mouth 4', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 4.png' },
-                { name: 'Mouth 5', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 5.png' },
-                { name: 'Mouth 6', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 6.png' },
-                { name: 'Mouth 7', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 7.png' },
-                { name: 'Mouth 8', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 8.png' },
-                { name: 'Mouth 9', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 9.png' },
-                { name: 'Mouth 10', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 10.png' },
-                { name: 'Mouth 11', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 11.png' },
-                { name: 'Mouth 12', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 12.png' },
-                { name: 'Mouth 13', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 13.png' },
-                { name: 'Mouth 14', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 14.png' },
-                { name: 'Mouth 15', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 15.png' },
-                { name: 'Mouth 16', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 16.png' },
-                { name: 'Mouth 17', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 17.png' },
-                { name: 'Mouth 18', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 18.png' },
-                { name: 'Mouth 19', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 19.png' },
-                { name: 'Mouth 20', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth 20.png' }
-            ],
-
-            accessories: [
-                { name: 'Accessories 1', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 1.png' },
-                { name: 'Accessories 2', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 2.png' },
-                { name: 'Accessories 3', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 3.png' },
-                { name: 'Accessories 4', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 4.png' },
-                { name: 'Accessories 5', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 5.png' },
-                { name: 'Accessories 6', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 6.png' },
-                { name: 'Accessories 7', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 7.png' },
-                { name: 'Accessories 8', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 8.png' },
-                { name: 'Accessories 9', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 9.png' },
-                { name: 'Accessories 10', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 10.png' },
-                { name: 'Accessories 11', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 11.png' },
-                { name: 'Accessories 12', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 12.png' },
-                { name: 'Accessories 13', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 13.png' },
-                { name: 'Accessories 14', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 14.png' },
-                { name: 'Accessories 15', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 15.png' },
-                { name: 'Accessories 16', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 16.png' },
-                { name: 'Accessories 17', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 17.png' },
-                { name: 'Accessories 18', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 18.png' },
-                { name: 'Accessories 19', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 19.png' },
-                { name: 'Accessories 20', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories 20.png' }
-            ],
-
-            flags: [
-                { name: 'Flag 1', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 1.png' },
-                { name: 'Flag 2', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 2.png' },
-                { name: 'Flag 3', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 3.png' },
-                { name: 'Flag 4', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 4.png' },
-                { name: 'Flag 5', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 5.png' },
-                { name: 'Flag 6', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 6.png' },
-                { name: 'Flag 7', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 7.png' },
-                { name: 'Flag 8', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 8.png' },
-                { name: 'Flag 9', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 9.png' },
-                { name: 'Flag 10', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 10.png' },
-                { name: 'Flag 11', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 11.png' },
-                { name: 'Flag 12', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 12.png' },
-                { name: 'Flag 13', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 13.png' },
-                { name: 'Flag 14', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 14.png' },
-                { name: 'Flag 15', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 15.png' },
-                { name: 'Flag 16', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 16.png' },
-                { name: 'Flag 17', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 17.png' },
-                { name: 'Flag 18', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 18.png' },
-                { name: 'Flag 19', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 19.png' },
-                { name: 'Flag 20', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 20.png' },
-                { name: 'Flag 21', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 21.png' },
-                { name: 'Flag 22', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 22.png' },
-                { name: 'Flag 23', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 23.png' },
-                { name: 'Flag 24', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 24.png' },
-                { name: 'Flag 25', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag 25.png' }
-            ],
-
+            backgrounds: Array.from({length: 55}, (_, i) => ({
+                name: `Background ${i+1}`,
+                imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background${i+1}.png`
+            })),
+            hair: Array.from({length: 30}, (_, i) => ({
+                name: `Haircut ${i+1}`,
+                imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut ${i+1}.png`
+            })),
+            eyes: Array.from({length: 20}, (_, i) => ({
+                name: `Eyes ${i+1}`,
+                imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes ${i+1}.png`
+            })),
+            mouth: Array.from({length: 20}, (_, i) => ({
+                name: `Mouth ${i+1}`,
+                imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth ${i+1}.png`
+            })),
+            accessories: Array.from({length: 20}, (_, i) => ({
+                name: `Accessories ${i+1}`,
+                imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories ${i+1}.png`
+            })),
+            flags: Array.from({length: 25}, (_, i) => ({
+                name: `Flag ${i+1}`,
+                imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag ${i+1}.png`
+            })),
             magnitude: [
-                { name: 'Badge 1', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mag 1.png' },
-                { name: 'Badge 2', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mag 2.png' },
-                { name: 'Badge 3', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mag 3.png' },
-                { name: 'Badge 4', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mag 4.png' },
-                { name: 'Badge 5', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mag 5.png' },
-                { name: 'Badge 6', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mag 6.png' },
-                { name: 'Badge 7', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mag 7.png' },
-                { name: 'Badge 8', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mag 8.png' },
-                { name: 'Badge 9', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mag 9.png' },
+                ...Array.from({length: 9}, (_, i) => ({
+                    name: `Badge ${i+1}`,
+                    imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mag ${i+1}.png`
+                })),
                 { name: 'Leader', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Leader.png' },
-                { name: 'Mod', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mod.png' }
+                { name: 'Mod',    imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mod.png'    }
             ],
-
             bodyparts: [
                 { name: 'Right Shoulder', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Right shoulder.png' },
-                { name: 'Left Shoulder', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Left shoulder.png' },
-                { name: 'Right Arm', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Right arm.png' },
-                { name: 'Left Arm', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Left arm.png' }
+                { name: 'Left Shoulder',  imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Left shoulder.png'  },
+                { name: 'Right Arm',      imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Right arm.png'      },
+                { name: 'Left Arm',       imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Left arm.png'       }
             ]
         };
 
-        // --------------------------------------------------------------
+        // ============================================================
         // LOAD ROCKY
-        // --------------------------------------------------------------
+        // ============================================================
         const DEFAULT_ROCKY_URL = 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/rocky_base.png';
 
-        function loadRockyFromURL(url, label = url) {
-            if (baseImage) {
-                canvas.remove(baseImage);
-                baseImage = null;
-            }
+        function loadRockyFromURL(url) {
+            if (baseImage) { canvas.remove(baseImage); baseImage = null; }
             toBase64(url).then(dataUrl => {
                 fabric.Image.fromURL(dataUrl, (img) => {
-                    if (!img || !img.width) {
-                        console.error('❌ Rocky not found:', label);
-                        return;
-                    }
-                    const scale = Math.min(
-                        (CANVAS_SIZE * 0.85) / img.width,
-                        (CANVAS_SIZE * 0.85) / img.height
-                    );
+                    if (!img || !img.width) return;
+                    const scale = Math.min((CANVAS_SIZE * 0.85) / img.width, (CANVAS_SIZE * 0.85) / img.height);
                     img.scale(scale);
                     img.set({
-                        left: CANVAS_SIZE / 2,
-                        top: CANVAS_SIZE,
+                        left: CANVAS_SIZE / 2, top: CANVAS_SIZE,
                         originX: 'center', originY: 'bottom',
                         selectable: false, evented: false,
                         hasControls: false, hasBorders: false,
@@ -1063,38 +678,36 @@
                     canvas.add(img);
                     canvas.renderAll();
                 });
-            }).catch(err => console.error('❌ Failed to load Rocky:', err));
+            }).catch(console.error);
         }
 
-        // --------------------------------------------------------------
-        // INTERFACE
-        // --------------------------------------------------------------
+        // ============================================================
+        // UI
+        // ============================================================
         function loadCategoryTabs() {
-            const tabsContainer = document.getElementById('categoryTabs');
-            tabsContainer.innerHTML = '';
-            
+            const container = document.getElementById('categoryTabs');
+            container.innerHTML = '';
             const categories = [
                 { id: 'backgrounds', label: '🎨 Backgrounds' },
-                { id: 'hair', label: '💇 Hair' },
-                { id: 'eyes', label: '👁️ Eyes' },
-                { id: 'mouth', label: '👄 Mouth' },
+                { id: 'hair',        label: '💇 Hair'        },
+                { id: 'eyes',        label: '👁️ Eyes'        },
+                { id: 'mouth',       label: '👄 Mouth'       },
                 { id: 'accessories', label: '🎩 Accessories' },
-                { id: 'flags', label: '🚩 Flags' },
-                { id: 'magnitude', label: '🏅 Badges' },
-                { id: 'bodyparts', label: '💪 Body Parts' }
+                { id: 'flags',       label: '🚩 Flags'       },
+                { id: 'magnitude',   label: '🏅 Badges'      },
+                { id: 'bodyparts',   label: '💪 Body Parts'  }
             ];
-            
             categories.forEach(cat => {
                 const tab = document.createElement('div');
                 tab.className = 'category-tab' + (cat.id === currentCategory ? ' active' : '');
                 tab.textContent = cat.label;
                 tab.onclick = () => switchCategory(cat.id);
-                tabsContainer.appendChild(tab);
+                container.appendChild(tab);
             });
         }
 
-        function switchCategory(categoryId) {
-            currentCategory = categoryId;
+        function switchCategory(id) {
+            currentCategory = id;
             loadCategoryTabs();
             loadAssetGrid();
         }
@@ -1102,73 +715,49 @@
         function loadAssetGrid() {
             const grid = document.getElementById('assetGrid');
             grid.innerHTML = '';
-            
             grid.setAttribute('data-category', currentCategory);
-            
-            const assets = ASSETS[currentCategory] || [];
-            
-            assets.forEach((asset, index) => {
+
+            (ASSETS[currentCategory] || []).forEach((asset, index) => {
                 const item = document.createElement('div');
                 item.className = 'asset-item';
                 item.dataset.assetIndex = index;
-                
+
                 const img = document.createElement('img');
-                const src = currentCategory === 'backgrounds'
-                    ? asset.imageUrl
-                    : (asset.imageUrl.includes(' ') ? encodeURI(asset.imageUrl) : asset.imageUrl);
+                const src = asset.imageUrl.includes(' ') ? encodeURI(asset.imageUrl) : asset.imageUrl;
                 img.src = src;
                 img.alt = asset.name;
                 img.style.objectFit = currentCategory === 'backgrounds' ? 'cover' : 'contain';
                 img.onerror = function() {
-                    this.src = currentCategory === 'backgrounds'
-                        ? 'https://placehold.co/200x200/CCCCCC/2D3142?text=BG'
-                        : 'https://placehold.co/200x200/CCCCCC/2D3142?text=Missing';
+                    this.src = 'https://placehold.co/200x200/CCCCCC/2D3142?text=?';
                 };
                 item.appendChild(img);
-                
+
                 const name = document.createElement('div');
                 name.className = 'asset-name';
                 name.textContent = asset.name.toUpperCase();
                 item.appendChild(name);
-                
+
                 grid.appendChild(item);
             });
         }
 
-        // --------------------------------------------------------------
+        // ============================================================
         // CLICK DELEGATION
-        // --------------------------------------------------------------
+        // ============================================================
         document.getElementById('assetGrid').addEventListener('click', (e) => {
-            const assetItem = e.target.closest('.asset-item');
-            if (!assetItem) return;
-            
-            const index = assetItem.dataset.assetIndex;
-            if (index === undefined) return;
-            
-            const assets = ASSETS[currentCategory];
-            if (!assets) return;
-            
-            const asset = assets[parseInt(index)];
+            const item = e.target.closest('.asset-item');
+            if (!item) return;
+            const asset = (ASSETS[currentCategory] || [])[parseInt(item.dataset.assetIndex)];
             if (!asset) return;
-            
-            if (currentCategory === 'backgrounds') {
-                addBackgroundToCanvas(asset);
-            } else {
-                addAssetToCanvas(asset);
-            }
+            currentCategory === 'backgrounds' ? addBackgroundToCanvas(asset) : addAssetToCanvas(asset);
         });
 
-        // --------------------------------------------------------------
+        // ============================================================
         // ADD OBJECTS
-        // --------------------------------------------------------------
+        // ============================================================
         function addBackgroundToCanvas(bgAsset) {
-            const objects = canvas.getObjects();
-            objects.forEach(obj => {
-                if (obj.isBackground) canvas.remove(obj);
-            });
-
-            const url = bgAsset.imageUrl;
-            toBase64(url).then(dataUrl => {
+            canvas.getObjects().forEach(obj => { if (obj.isBackground) canvas.remove(obj); });
+            toBase64(bgAsset.imageUrl).then(dataUrl => {
                 fabric.Image.fromURL(dataUrl, (img) => {
                     if (!img || !img.width) return;
                     img.set({
@@ -1188,12 +777,11 @@
                         setTimeout(updateNicknameColor, 50);
                     }
                 });
-            }).catch(err => console.error('❌ Background load failed:', err));
+            }).catch(console.error);
         }
 
         function addAssetToCanvas(asset) {
-            const url = asset.imageUrl;
-            toBase64(url).then(dataUrl => {
+            toBase64(asset.imageUrl).then(dataUrl => {
                 fabric.Image.fromURL(dataUrl, (img) => {
                     if (!img || !img.width) return;
                     const scale = Math.min(150 / img.width, 150 / img.height);
@@ -1211,131 +799,56 @@
                     canvas.setActiveObject(img);
                     canvas.renderAll();
                 });
-            }).catch(err => {
-                console.error('❌ Asset load failed:', err);
-                alert(`Failed to load: ${asset.name}`);
-            });
+            }).catch(console.error);
         }
 
-        // --------------------------------------------------------------
+        // ============================================================
         // LAYER CONTROLS
-        // --------------------------------------------------------------
+        // ============================================================
         function bringForward() {
-            const activeObject = canvas.getActiveObject();
-            if (activeObject && activeObject !== baseImage && !activeObject.isBackground && !activeObject.isNickname) {
-                canvas.bringForward(activeObject);
-                canvas.renderAll();
+            const obj = canvas.getActiveObject();
+            if (obj && obj !== baseImage && !obj.isBackground && !obj.isNickname) {
+                canvas.bringForward(obj); canvas.renderAll();
             } else {
                 alert('Please select an asset (not Rocky or background) to bring forward.');
             }
         }
 
         function sendBackward() {
-            const activeObject = canvas.getActiveObject();
-            if (activeObject && activeObject !== baseImage && !activeObject.isBackground && !activeObject.isNickname) {
-                canvas.sendBackwards(activeObject);
-                canvas.renderAll();
+            const obj = canvas.getActiveObject();
+            if (obj && obj !== baseImage && !obj.isBackground && !obj.isNickname) {
+                canvas.sendBackwards(obj); canvas.renderAll();
             } else {
                 alert('Please select an asset (not Rocky or background) to send backward.');
             }
         }
 
-        // --------------------------------------------------------------
-        // EVENTS
-        // --------------------------------------------------------------
-        // --------------------------------------------------------------
-        // HELPER — charge une URL et la convertit en base64 data URL
-        // Évite complètement le problème de "tainted canvas"
-        // --------------------------------------------------------------
+        // ============================================================
+        // HELPERS
+        // ============================================================
         function toBase64(url) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
                 img.crossOrigin = 'anonymous';
                 img.onload = () => {
                     const c = document.createElement('canvas');
-                    c.width = img.naturalWidth;
-                    c.height = img.naturalHeight;
+                    c.width = img.naturalWidth; c.height = img.naturalHeight;
                     c.getContext('2d').drawImage(img, 0, 0);
-                    try {
-                        resolve(c.toDataURL('image/png'));
-                    } catch(e) {
-                        reject(e);
-                    }
+                    try { resolve(c.toDataURL('image/png')); } catch(e) { reject(e); }
                 };
                 img.onerror = reject;
-                // Cache-bust pour forcer le header CORS
                 img.src = url + (url.includes('?') ? '&' : '?') + '_cb=' + Date.now();
             });
         }
 
-        // --------------------------------------------------------------
-        // HELPER — export canvas
-        // --------------------------------------------------------------
-        function getCanvasDataURL() {
-            canvas.discardActiveObject();
-            canvas.renderAll();
-            const fabricEl = canvas.getElement();
-            const tmp = document.createElement('canvas');
-            tmp.width  = fabricEl.width;
-            tmp.height = fabricEl.height;
-            tmp.getContext('2d').drawImage(fabricEl, 0, 0);
-            return tmp.toDataURL('image/png');
-        }
-
-        // --------------------------------------------------------------
+        // ============================================================
         // EVENTS
-        // --------------------------------------------------------------
+        // ============================================================
         document.getElementById('downloadBtn').addEventListener('click', () => {
-            try {
-                canvas.discardActiveObject();
-                canvas.renderAll();
-
-                const fabricEl = canvas.getElement();
-                fabricEl.toBlob((blob) => {
-                    if (!blob) { console.error('toBlob returned null'); return; }
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.download = `rocky-${Date.now()}.png`;
-                    link.href = url;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    setTimeout(() => URL.revokeObjectURL(url), 1000);
-                }, 'image/png');
-            } catch (e) {
-                console.error('Export failed:', e);
-            }
-        });
-
-        document.getElementById('shareBtn').addEventListener('click', () => {
-            canvas.discardActiveObject();
-            canvas.renderAll();
-            const fabricEl = canvas.getElement();
-
-            fabricEl.toBlob(async (blob) => {
+            canvas.discardActiveObject(); canvas.renderAll();
+            canvas.getElement().toBlob((blob) => {
                 if (!blob) return;
-
-                const file = new File([blob], 'my-rocky.png', { type: 'image/png' });
-                const text  = 'Check out my Rocky! 🗿 #SeismicRocky #Seismic';
-                const shareUrl = 'https://x.com/Math_FTN74/status/2003229670272025066';
-
-                // Web Share API — partage natif avec l'image en pièce jointe
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try {
-                        await navigator.share({
-                            title: 'Rocky Builder',
-                            text: text + '\n' + shareUrl,
-                            files: [file]
-                        });
-                        return; // succès — on s'arrête là
-                    } catch (e) {
-                        if (e.name === 'AbortError') return; // l'utilisateur a annulé
-                        console.warn('Web Share failed, fallback:', e);
-                    }
-                }
-
-                // Fallback : télécharge l'image + ouvre X
-                const url = URL.createObjectURL(blob);
+                const url  = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.download = `rocky-${Date.now()}.png`;
                 link.href = url;
@@ -1343,21 +856,37 @@
                 link.click();
                 document.body.removeChild(link);
                 setTimeout(() => URL.revokeObjectURL(url), 1000);
+            }, 'image/png');
+        });
 
+        document.getElementById('shareBtn').addEventListener('click', () => {
+            canvas.discardActiveObject(); canvas.renderAll();
+            canvas.getElement().toBlob(async (blob) => {
+                if (!blob) return;
+                const file     = new File([blob], 'my-rocky.png', { type: 'image/png' });
+                const text     = 'Check out my Rocky! 🗿 #SeismicRocky #Seismic';
+                const shareUrl = 'https://x.com/Math_FTN74/status/2003229670272025066';
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try { await navigator.share({ title: 'Rocky Builder', text: text + '\n' + shareUrl, files: [file] }); return; }
+                    catch (e) { if (e.name === 'AbortError') return; }
+                }
+
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = `rocky-${Date.now()}.png`; link.href = url;
+                document.body.appendChild(link); link.click();
+                document.body.removeChild(link);
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
                 setTimeout(() => {
-                    const encodedText = encodeURIComponent(text);
-                    window.open(`https://x.com/intent/tweet?text=${encodedText}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+                    window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
                 }, 400);
-
             }, 'image/png');
         });
 
         document.getElementById('clearBtn').addEventListener('click', () => {
             if (confirm('Clear all items? This action is irreversible.')) {
-                const objects = canvas.getObjects();
-                objects.forEach(obj => {
-                    if (obj !== baseImage) canvas.remove(obj);
-                });
+                canvas.getObjects().forEach(obj => { if (obj !== baseImage) canvas.remove(obj); });
                 nicknameObj = null;
                 canvas.renderAll();
             }
@@ -1368,67 +897,42 @@
 
         document.addEventListener('keydown', (e) => {
             if ((e.key === 'Delete' || e.key === 'Backspace') && document.activeElement.tagName !== 'INPUT') {
-                const activeObject = canvas.getActiveObject();
-                if (activeObject && activeObject !== baseImage && !activeObject.isBackground && !activeObject.isNickname) {
-                    canvas.remove(activeObject);
-                    canvas.renderAll();
-                    e.preventDefault();
+                const obj = canvas.getActiveObject();
+                if (obj && obj !== baseImage && !obj.isBackground && !obj.isNickname) {
+                    canvas.remove(obj); canvas.renderAll(); e.preventDefault();
                 }
             }
         });
 
-        // --------------------------------------------------------------
-        // NICKNAME SYSTEM
-        // --------------------------------------------------------------
-
-        // Calcule la luminance moyenne d'un background Fabric (image)
-        // en rendant le canvas dans un canvas 2D off-screen et en échantillonnant
+        // ============================================================
+        // NICKNAME
+        // ============================================================
         function getBackgroundLuminance() {
             return new Promise((resolve) => {
                 const bgObj = canvas.getObjects().find(o => o.isBackground);
-                if (!bgObj) { resolve(1); return; } // pas de bg = fond blanc
-
-                // Render le canvas Fabric dans un canvas temporaire 64x64
+                if (!bgObj) { resolve(1); return; }
                 const size = 64;
-                const offscreen = document.createElement('canvas');
-                offscreen.width  = size;
-                offscreen.height = size;
-                const ctx = offscreen.getContext('2d');
-
-                // On dessine uniquement le background à l'échelle réduite
-                const fabricCanvas = canvas.getElement();
-                ctx.drawImage(fabricCanvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, 0, 0, size, size);
-
+                const off  = document.createElement('canvas');
+                off.width  = size; off.height = size;
+                const ctx  = off.getContext('2d');
+                ctx.drawImage(canvas.getElement(), 0, 0, CANVAS_SIZE, CANVAS_SIZE, 0, 0, size, size);
                 const data = ctx.getImageData(0, 0, size, size).data;
-                let total = 0;
-                const pixels = size * size;
-                for (let i = 0; i < data.length; i += 4) {
-                    const r = data[i], g = data[i+1], b = data[i+2];
-                    // Luminance relative (formule perceptuelle)
-                    total += (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-                }
-                resolve(total / pixels);
+                let total  = 0;
+                for (let i = 0; i < data.length; i += 4)
+                    total += (0.2126 * data[i] + 0.7152 * data[i+1] + 0.0722 * data[i+2]) / 255;
+                resolve(total / (size * size));
             });
         }
 
         async function updateNicknameColor() {
             if (!nicknameObj) return;
-            const lum = await getBackgroundLuminance();
-            // Blanc/gris clair (luminance très haute et peu saturé) → noir, sinon → blanc
-            const isNeutralLight = lum > 0.80;
-            const textColor   = isNeutralLight ? '#111111' : '#FFFFFF';
-            const strokeColor = isNeutralLight ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.55)';
+            const lum   = await getBackgroundLuminance();
+            const light = lum > 0.80;
             nicknameObj.set({
-                fill:        textColor,
-                stroke:      strokeColor,
-                strokeWidth: 6,
-                paintFirst:  'stroke',
-                shadow: new fabric.Shadow({
-                    color:   isNeutralLight ? 'rgba(0,0,0,0.25)' : 'rgba(0,0,0,0.5)',
-                    blur:    8,
-                    offsetX: 2,
-                    offsetY: 2
-                })
+                fill:        light ? '#111111' : '#FFFFFF',
+                stroke:      light ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.55)',
+                strokeWidth: 6, paintFirst: 'stroke',
+                shadow: new fabric.Shadow({ color: light ? 'rgba(0,0,0,0.25)' : 'rgba(0,0,0,0.5)', blur: 8, offsetX: 2, offsetY: 2 })
             });
             canvas.renderAll();
         }
@@ -1436,35 +940,21 @@
         function applyNickname() {
             const text = document.getElementById('nicknameInput').value.trim();
             if (!text) return;
-
-            if (nicknameObj) {
-                canvas.remove(nicknameObj);
-                nicknameObj = null;
-            }
+            if (nicknameObj) { canvas.remove(nicknameObj); nicknameObj = null; }
 
             const MARGIN = 32;
             nicknameObj = new fabric.Text(text, {
-                left:        CANVAS_SIZE - MARGIN,
-                top:         CANVAS_SIZE - MARGIN,
-                originX:     'right',
-                originY:     'bottom',
-                fontSize:    52,
-                fontFamily:  'Nunito',
-                fontWeight:  '900',
-                fill:        '#FFFFFF',
-                stroke:      'rgba(0,0,0,0.55)',
-                strokeWidth: 6,
-                paintFirst:  'stroke',
+                left: CANVAS_SIZE - MARGIN, top: CANVAS_SIZE - MARGIN,
+                originX: 'right', originY: 'bottom',
+                fontSize: 52, fontFamily: 'Nunito', fontWeight: '900',
+                fill: '#FFFFFF', stroke: 'rgba(0,0,0,0.55)', strokeWidth: 6,
+                paintFirst: 'stroke',
                 shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.5)', blur: 8, offsetX: 2, offsetY: 2 }),
-                selectable:    false,
-                evented:       false,
-                hasControls:   false,
-                hasBorders:    false,
-                lockMovementX: true,
-                lockMovementY: true,
-                isNickname:    true
+                selectable: false, evented: false,
+                hasControls: false, hasBorders: false,
+                lockMovementX: true, lockMovementY: true,
+                isNickname: true
             });
-
             canvas.add(nicknameObj);
             canvas.bringToFront(nicknameObj);
             canvas.renderAll();
@@ -1472,40 +962,23 @@
         }
 
         document.getElementById('applyNicknameBtn').addEventListener('click', applyNickname);
-        document.getElementById('nicknameInput').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') applyNickname();
-        });
+        document.getElementById('nicknameInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') applyNickname(); });
 
-        // Recalculer la couleur du nickname à chaque ajout de background
-        const _origAddBg = addBackgroundToCanvas;
-        // Override via wrapping (on patchera après le chargement du bg)
-
-        // --------------------------------------------------------------
-        // INIT
-        // --------------------------------------------------------------
-        loadCategoryTabs();
-        loadAssetGrid();
-        loadRockyFromURL(DEFAULT_ROCKY_URL, 'rocky_base.png');
-
-        // --------------------------------------------------------------
+        // ============================================================
         // RESPONSIVE CANVAS SCALING
-        // Scale le canvas Fabric visuellement selon la largeur du wrapper
-        // Le canvas interne reste 1024x1024 pour l'export
-        // --------------------------------------------------------------
+        // ============================================================
         function scaleCanvasToWrapper() {
             const wrapper = document.querySelector('.canvas-wrapper');
-            const wrapperWidth = wrapper.clientWidth;
-            if (wrapperWidth >= CANVAS_SIZE) {
-                // Desktop : taille naturelle
+            const w = wrapper.clientWidth;
+            if (w >= CANVAS_SIZE) {
                 canvas.setZoom(1);
                 canvas.setWidth(CANVAS_SIZE);
                 canvas.setHeight(CANVAS_SIZE);
             } else {
-                // Mobile : zoom proportionnel
-                const scale = wrapperWidth / CANVAS_SIZE;
+                const scale = w / CANVAS_SIZE;
                 canvas.setZoom(scale);
-                canvas.setWidth(wrapperWidth);
-                canvas.setHeight(wrapperWidth); // carré
+                canvas.setWidth(w);
+                canvas.setHeight(w);
             }
             canvas.renderAll();
             positionOverlay();
@@ -1514,38 +987,37 @@
         window.addEventListener('resize', scaleCanvasToWrapper);
         setTimeout(scaleCanvasToWrapper, 100);
 
-        // OVERLAY POSITIONING — ancré sur le coin haut-gauche du canvas-wrapper
-        // --------------------------------------------------------------
-        const overlayImg = document.getElementById('siteOverlay');
+        // ============================================================
+        // OVERLAY POSITIONING
+        // ============================================================
+        const overlayImg      = document.getElementById('siteOverlay');
         const canvasWrapperEl = document.querySelector('.canvas-wrapper');
-
-        // OVERLAY_SCALE : largeur de l'overlay = N * largeur du canvas-wrapper rendu
-        const OVERLAY_SCALE = 0.35;   // ajuste pour changer la taille du perso
-        const OFFSET_X_PX = -173;      // décalage en pixels vers la gauche depuis le coin du cadre
-        const OFFSET_Y_PX = -167;      // décalage en pixels vers le haut depuis le coin du cadre
+        const OVERLAY_SCALE   = 0.35;
+        const OFFSET_X_PX     = -173;
+        const OFFSET_Y_PX     = -167;
 
         function positionOverlay() {
             const rect = canvasWrapperEl.getBoundingClientRect();
-            const w = rect.width * OVERLAY_SCALE;
-            const x = rect.left + OFFSET_X_PX;
-            const y = rect.top  + OFFSET_Y_PX;
-
+            const w    = rect.width * OVERLAY_SCALE;
             overlayImg.style.width  = w + 'px';
             overlayImg.style.height = 'auto';
-            overlayImg.style.left   = x + 'px';
-            overlayImg.style.top    = y + 'px';
+            overlayImg.style.left   = (rect.left + OFFSET_X_PX) + 'px';
+            overlayImg.style.top    = (rect.top  + OFFSET_Y_PX) + 'px';
         }
 
-        // Attendre que l'image overlay soit chargée pour éviter un flash
         overlayImg.onload = positionOverlay;
         if (overlayImg.complete) positionOverlay();
-
         window.addEventListener('resize', positionOverlay);
-        // Sur scroll, le canvas bouge dans le viewport donc on recalcule
         window.addEventListener('scroll', positionOverlay, { passive: true });
-        // Recalcul après les animations de layout (ex: chargement de Rocky)
         setTimeout(positionOverlay, 500);
         setTimeout(positionOverlay, 1200);
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        loadCategoryTabs();
+        loadAssetGrid();
+        loadRockyFromURL(DEFAULT_ROCKY_URL);
     </script>
 </body>
 </html>
