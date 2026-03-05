@@ -441,17 +441,55 @@
             .panel-title { font-size: 1rem; margin-bottom: 8px; }
 
             /* Tabs scrollables horizontalement */
+            /* Wrapper pour le fade latéral */
+            .category-tabs-wrapper {
+                position: relative;
+                margin-bottom: 10px;
+            }
+            /* Dégradé droite — indique qu'il y a d'autres onglets */
+            .category-tabs-wrapper::after {
+                content: '';
+                position: absolute;
+                top: 0; right: 0;
+                width: 48px;
+                height: 100%;
+                background: linear-gradient(to right, transparent, white);
+                pointer-events: none;
+                z-index: 2;
+                border-radius: 0 8px 8px 0;
+                transition: opacity 0.3s;
+            }
+            /* Petite flèche animée à droite */
+            .category-tabs-wrapper::before {
+                content: '›';
+                position: absolute;
+                right: 6px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 1.2rem;
+                color: var(--primary);
+                pointer-events: none;
+                z-index: 3;
+                animation: nudge 1.2s ease-in-out infinite;
+            }
+            @keyframes nudge {
+                0%, 100% { transform: translateY(-50%) translateX(0); opacity: 1; }
+                50%       { transform: translateY(-50%) translateX(4px); opacity: 0.5; }
+            }
             .category-tabs {
                 display: flex;
                 flex-wrap: nowrap;
                 overflow-x: auto;
                 gap: 6px;
                 padding-bottom: 4px;
+                padding-right: 40px; /* espace pour voir le fade */
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none;
-                margin-bottom: 10px;
             }
             .category-tabs::-webkit-scrollbar { display: none; }
+            /* Quand tout est visible, cacher le fade et la flèche */
+            .category-tabs-wrapper.tabs-end::after,
+            .category-tabs-wrapper.tabs-end::before { opacity: 0; pointer-events: none; }
 
             .category-tab {
                 font-size: 0.75rem;
@@ -597,7 +635,9 @@
             <div class="sidebar">
                 <div class="panel">
                     <h2 class="panel-title">Customize Rocky</h2>
-                    <div class="category-tabs" id="categoryTabs"></div>
+                    <div class="category-tabs-wrapper" id="categoryTabsWrapper">
+                        <div class="category-tabs" id="categoryTabs"></div>
+                    </div>
                     <div class="asset-grid-wrapper">
                         <div class="asset-grid" id="assetGrid"></div>
                         <div class="asset-grid-fade" id="assetGridFade"></div>
@@ -1066,6 +1106,24 @@
         }
 
         document.getElementById('assetGrid').addEventListener('scroll', updateScrollFade, { passive: true });
+
+        // Cacher le fade + flèche des tabs quand on a scrollé jusqu'au bout
+        function updateTabsFade() {
+            const tabs = document.getElementById('categoryTabs');
+            const wrapper = document.getElementById('categoryTabsWrapper');
+            if (!tabs || !wrapper) return;
+            const atEnd = tabs.scrollLeft + tabs.clientWidth >= tabs.scrollWidth - 4;
+            if (atEnd) {
+                wrapper.style.setProperty('--fade-opacity', '0');
+                wrapper.classList.add('tabs-end');
+            } else {
+                wrapper.style.setProperty('--fade-opacity', '1');
+                wrapper.classList.remove('tabs-end');
+            }
+        }
+
+        document.getElementById('categoryTabs').addEventListener('scroll', updateTabsFade, { passive: true });
+        setTimeout(updateTabsFade, 150);
 
         // Recalculer après chaque changement de catégorie
         const _origLoadAssetGrid = loadAssetGrid;
