@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rocky Builder - Create Your Avatar</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@900&family=Fredoka:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== STYLES DE BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #F7931E;
+            --accent: #FDC500;
+            --light: #FFF8F0;
+            --shadow: rgba(255, 107, 53, 0.2);
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: url('background site.png') center center / cover fixed, linear-gradient(135deg, #FFF8F0 0%, #FFE5D9 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #2D3142;
+        }
+
+        /* ===== LEFT SIDEBAR ===== */
+        .left-sidebar {
+            position: fixed;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 50px;
+            padding: 14px 10px;
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.15);
+            border: 1px solid rgba(255, 107, 53, 0.15);
+        }
+
+        .left-sidebar a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--light);
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 1.1rem;
+        }
+
+        .left-sidebar a:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .left-sidebar a svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .left-sidebar-divider {
+            width: 24px;
+            height: 1px;
+            background: rgba(255, 107, 53, 0.2);
+            border-radius: 1px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-family: 'Nunito', sans-serif;
+            font-size: 4.2rem;
+            font-weight: 900;
+            color: #1a1a1a;
+            text-shadow: 3px 3px 0 rgba(253, 197, 0, 0.6), 5px 5px 0 rgba(247, 147, 30, 0.3);
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            color: #2D3142;
+            opacity: 0.8;
+            font-weight: 700;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .canvas-container {
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+        }
+
+        .canvas-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: 
+                linear-gradient(45deg, #ccc 25%, transparent 25%),
+                linear-gradient(-45deg, #ccc 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #ccc 75%),
+                linear-gradient(-45deg, transparent 75%, #ccc 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            background-color: #f5f5f5;
+        }
+
+        #canvas {
+            border-radius: 16px;
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 25px var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #E63946;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #D62828;
+            box-shadow: 0 6px 25px rgba(230, 57, 70, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #FDC500, #F7931E);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #F7931E, #FF6B35);
+            box-shadow: 0 6px 25px rgba(247, 147, 30, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .btn-share {
+            background: #000000;
+            color: white;
+        }
+
+        .btn-share:hover {
+            background: #1a1a1a;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            animation: slideLeft 0.8s ease-out 0.4s both;
+        }
+
+        @keyframes slideLeft {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .panel-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .category-tab {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--light);
+            background: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #2D3142;
+        }
+
+        .category-tab:hover {
+            border-color: var(--secondary);
+            background: var(--light);
+        }
+
+        .category-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-color: transparent;
+        }
+
+        /* ===== GRILLE ===== */
+        .asset-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 85px);
+            gap: 10px;
+            max-height: 500px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 6px;
+        }
+
+        .asset-grid[data-category="flags"] {
+            grid-template-columns: repeat(3, 85px);
+            gap: 10px;
+        }
+
+        .asset-grid::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .asset-grid::-webkit-scrollbar-track {
+            background: var(--light);
+            border-radius: 10px;
+        }
+
+        .asset-grid::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 10px;
+        }
+
+        .asset-item {
+            width: 85px;
+            height: 85px;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            border: 2px solid #ddd;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            position: relative;
+            display: block;
+            flex-shrink: 0;
+        }
+
+        .asset-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 85px;
+            height: 85px;
+            object-fit: contain;
+            pointer-events: none;
+            display: block;
+        }
+
+        .asset-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .asset-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 16px var(--shadow);
+            outline: 2px solid var(--primary);
+        }
+
+        .asset-item:hover::before {
+            opacity: 0.08;
+        }
+
+        .asset-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(45, 49, 66, 0.9);
+            color: white;
+            font-size: 0.6rem;
+            padding: 4px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+            font-weight: 500;
+            pointer-events: none;
+        }
+
+        .asset-item:hover .asset-name {
+            opacity: 1;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #FFF8F0, #FFE5D9);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .instructions strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .info-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: #2D3142;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 1024px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+            .asset-grid {
+                grid-template-columns: repeat(4, 85px);
+                max-height: 300px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 2rem;
+                text-shadow: 2px 2px 0 var(--accent), 4px 4px 0 var(--secondary);
+            }
+            .canvas-wrapper canvas {
+                max-width: 100%;
+                height: auto !important;
+            }
+            .asset-grid {
+                grid-template-columns: repeat(3, 85px);
+            }
+        }
+        /* ===== NICKNAME ===== */
+        .nickname-section {
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 2px solid var(--light);
+        }
+
+        .nickname-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .nickname-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nickname-input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+            color: #2D3142;
+        }
+
+        .nickname-input:focus {
+            border-color: var(--primary);
+        }
+
+        .nickname-btn {
+            padding: 10px 18px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        /* ===== OVERLAY IMAGE (background site rocky.png) ===== */
+        .site-overlay {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            display: block;
+            transform-origin: top left;
+        }
+    </style>
+</head>
+<body>
+    <!-- LEFT SIDEBAR -->
+    <img src="background site rocky.png" id="siteOverlay" class="site-overlay" aria-hidden="true" alt="">
+    <div class="left-sidebar">
+        <!-- X / Twitter -->
+        <a href="https://x.com/SeismicSys" target="_blank" title="Follow on X">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <div class="left-sidebar-divider"></div>
+        <!-- Seismic Website -->
+        <a href="https://www.seismic.systems/" target="_blank" title="Seismic Systems">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        </a>
+        <div class="left-sidebar-divider"></div>
+        <!-- Discord -->
+        <a href="https://discord.com/invite/seismic" target="_blank" title="Join Discord">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.031.053a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        </a>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1><img src="head.png" alt="Rocky" style="height:0.85em; vertical-align:middle; margin-right:12px; display:inline-block;">What is your Rocky?</h1>
+            <p class="tagline"><strong>Customize your Rocky and share it with the world!</strong></p>
+        </header>
+
+        <div class="workspace">
+            <div class="canvas-container">
+                <div class="canvas-wrapper">
+                    <canvas id="canvas"></canvas>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-primary" id="downloadBtn">
+                        📥 Download
+                    </button>
+                    <button class="btn btn-share" id="shareBtn">
+                        𝕏 Share on X
+                    </button>
+                    <button class="btn btn-primary" id="clearBtn">
+                        ↺ Clear All
+                    </button>
+                    <button class="btn btn-secondary" id="bringForwardBtn">
+                        ⬆️ Bring Forward
+                    </button>
+                    <button class="btn btn-secondary" id="sendBackwardBtn">
+                        ⬇️ Send Backward
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="panel">
+                    <h2 class="panel-title">Customize Rocky</h2>
+                    
+                    <div class="category-tabs" id="categoryTabs"></div>
+                    
+                    <div class="asset-grid" id="assetGrid"></div>
+
+                    <!-- NICKNAME -->
+                    <div class="nickname-section">
+                        <label class="nickname-label" for="nicknameInput">Enter your nickname</label>
+                        <div class="nickname-row">
+                            <input type="text" id="nicknameInput" class="nickname-input" placeholder="Your Nickname" maxlength="30">
+                            <button class="btn btn-primary nickname-btn" id="applyNicknameBtn">Apply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel instructions">
+                    <strong>How to use:</strong><br><br>
+                    1️⃣ Pick a category<br>
+                    2️⃣ Add items to Rocky<br>
+                    3️⃣ Move, resize or rotate them<br>
+                    4️⃣ Change which item appears in front<br>
+                    5️⃣ Download your image
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --------------------------------------------------------------
+        // CANVAS CONFIGURATION
+        // --------------------------------------------------------------
+        const CANVAS_SIZE = 1024;
+        const canvas = new fabric.Canvas('canvas', {
+            width: CANVAS_SIZE,
+            height: CANVAS_SIZE,
+            preserveObjectStacking: true
+        });
+
+        let baseImage = null;
+        let currentCategory = 'backgrounds';
+        let nicknameObj = null;  // Fabric text object for the nickname
+
+        // --------------------------------------------------------------
+        // ASSETS : ALL CATEGORIES WITH LOCAL IMAGES
+        // --------------------------------------------------------------
+        const ASSETS = {
+            backgrounds: [
+                { name: 'Background 1', imageUrl: 'background1.png' },
+                { name: 'Background 2', imageUrl: 'background2.png' },
+                { name: 'Background 3', imageUrl: 'background3.png' },
+                { name: 'Background 4', imageUrl: 'background4.png' },
+                { name: 'Background 5', imageUrl: 'background5.png' },
+                { name: 'Background 6', imageUrl: 'background6.png' },
+                { name: 'Background 7', imageUrl: 'background7.png' },
+                { name: 'Background 8', imageUrl: 'background8.png' },
+                { name: 'Background 9', imageUrl: 'background9.png' },
+                { name: 'Background 10', imageUrl: 'background10.png' },
+                { name: 'Background 11', imageUrl: 'background11.png' },
+                { name: 'Background 12', imageUrl: 'background12.png' },
+                { name: 'Background 13', imageUrl: 'background13.png' },
+                { name: 'Background 14', imageUrl: 'background14.png' },
+                { name: 'Background 15', imageUrl: 'background15.png' },
+                { name: 'Background 16', imageUrl: 'background16.png' },
+                { name: 'Background 17', imageUrl: 'background17.png' },
+                { name: 'Background 18', imageUrl: 'background18.png' },
+                { name: 'Background 19', imageUrl: 'background19.png' },
+                { name: 'Background 20', imageUrl: 'background20.png' },
+                { name: 'Background 21', imageUrl: 'background21.png' },
+                { name: 'Background 22', imageUrl: 'background22.png' },
+                { name: 'Background 23', imageUrl: 'background23.png' },
+                { name: 'Background 24', imageUrl: 'background24.png' },
+                { name: 'Background 25', imageUrl: 'background25.png' },
+                { name: 'Background 26', imageUrl: 'background26.png' },
+                { name: 'Background 27', imageUrl: 'background27.png' },
+                { name: 'Background 28', imageUrl: 'background28.png' },
+                { name: 'Background 29', imageUrl: 'background29.png' },
+                { name: 'Background 30', imageUrl: 'background30.png' },
+                { name: 'Background 31', imageUrl: 'background31.png' },
+                { name: 'Background 32', imageUrl: 'background32.png' },
+                { name: 'Background 33', imageUrl: 'background33.png' },
+                { name: 'Background 34', imageUrl: 'background34.png' },
+                { name: 'Background 35', imageUrl: 'background35.png' },
+                { name: 'Background 36', imageUrl: 'background36.png' },
+                { name: 'Background 37', imageUrl: 'background37.png' },
+                { name: 'Background 38', imageUrl: 'background38.png' },
+                { name: 'Background 39', imageUrl: 'background39.png' },
+                { name: 'Background 40', imageUrl: 'background40.png' },
+                { name: 'Background 41', imageUrl: 'background41.png' },
+                { name: 'Background 42', imageUrl: 'background42.png' },
+                { name: 'Background 43', imageUrl: 'background43.png' },
+                { name: 'Background 44', imageUrl: 'background44.png' },
+                { name: 'Background 45', imageUrl: 'background45.png' },
+                { name: 'Background 46', imageUrl: 'background46.png' },
+                { name: 'Background 47', imageUrl: 'background47.png' },
+                { name: 'Background 48', imageUrl: 'background48.png' },
+                { name: 'Background 49', imageUrl: 'background49.png' },
+                { name: 'Background 50', imageUrl: 'background50.png' },
+                { name: 'Background 51', imageUrl: 'background51.png' },
+                { name: 'Background 52', imageUrl: 'background52.png' },
+                { name: 'Background 53', imageUrl: 'background53.png' },
+                { name: 'Background 54', imageUrl: 'background54.png' },
+                { name: 'Background 55', imageUrl: 'background55.png' }
+            ],
+
+            hair: [
+                { name: 'Haircut 1', imageUrl: 'haircut 1.png' },
+                { name: 'Haircut 2', imageUrl: 'haircut 2.png' },
+                { name: 'Haircut 3', imageUrl: 'haircut 3.png' },
+                { name: 'Haircut 4', imageUrl: 'haircut 4.png' },
+                { name: 'Haircut 5', imageUrl: 'haircut 5.png' },
+                { name: 'Haircut 6', imageUrl: 'haircut 6.png' },
+                { name: 'Haircut 7', imageUrl: 'haircut 7.png' },
+                { name: 'Haircut 8', imageUrl: 'haircut 8.png' },
+                { name: 'Haircut 9', imageUrl: 'haircut 9.png' },
+                { name: 'Haircut 10', imageUrl: 'haircut 10.png' },
+                { name: 'Haircut 11', imageUrl: 'haircut 11.png' },
+                { name: 'Haircut 12', imageUrl: 'haircut 12.png' },
+                { name: 'Haircut 13', imageUrl: 'haircut 13.png' },
+                { name: 'Haircut 14', imageUrl: 'haircut 14.png' },
+                { name: 'Haircut 15', imageUrl: 'haircut 15.png' },
+                { name: 'Haircut 16', imageUrl: 'haircut 16.png' },
+                { name: 'Haircut 17', imageUrl: 'haircut 17.png' },
+                { name: 'Haircut 18', imageUrl: 'haircut 18.png' },
+                { name: 'Haircut 19', imageUrl: 'haircut 19.png' },
+                { name: 'Haircut 20', imageUrl: 'haircut 20.png' },
+                { name: 'Haircut 21', imageUrl: 'haircut 21.png' },
+                { name: 'Haircut 22', imageUrl: 'haircut 22.png' },
+                { name: 'Haircut 23', imageUrl: 'haircut 23.png' },
+                { name: 'Haircut 24', imageUrl: 'haircut 24.png' },
+                { name: 'Haircut 25', imageUrl: 'haircut 25.png' },
+                { name: 'Haircut 26', imageUrl: 'haircut 26.png' },
+                { name: 'Haircut 27', imageUrl: 'haircut 27.png' },
+                { name: 'Haircut 28', imageUrl: 'haircut 28.png' },
+                { name: 'Haircut 29', imageUrl: 'haircut 29.png' },
+                { name: 'Haircut 30', imageUrl: 'haircut 30.png' }
+            ],
+
+            eyes: [
+                { name: 'Eyes 1', imageUrl: 'eyes 1.png' },
+                { name: 'Eyes 2', imageUrl: 'eyes 2.png' },
+                { name: 'Eyes 3', imageUrl: 'eyes 3.png' },
+                { name: 'Eyes 4', imageUrl: 'eyes 4.png' },
+                { name: 'Eyes 5', imageUrl: 'eyes 5.png' },
+                { name: 'Eyes 6', imageUrl: 'eyes 6.png' },
+                { name: 'Eyes 7', imageUrl: 'eyes 7.png' },
+                { name: 'Eyes 8', imageUrl: 'eyes 8.png' },
+                { name: 'Eyes 9', imageUrl: 'eyes 9.png' },
+                { name: 'Eyes 10', imageUrl: 'eyes 10.png' },
+                { name: 'Eyes 11', imageUrl: 'eyes 11.png' },
+                { name: 'Eyes 12', imageUrl: 'eyes 12.png' },
+                { name: 'Eyes 13', imageUrl: 'eyes 13.png' },
+                { name: 'Eyes 14', imageUrl: 'eyes 14.png' },
+                { name: 'Eyes 15', imageUrl: 'eyes 15.png' },
+                { name: 'Eyes 16', imageUrl: 'eyes 16.png' },
+                { name: 'Eyes 17', imageUrl: 'eyes 17.png' },
+                { name: 'Eyes 18', imageUrl: 'eyes 18.png' },
+                { name: 'Eyes 19', imageUrl: 'eyes 19.png' },
+                { name: 'Eyes 20', imageUrl: 'eyes 20.png' }
+            ],
+
+            mouth: [
+                { name: 'Mouth 1', imageUrl: 'mouth 1.png' },
+                { name: 'Mouth 2', imageUrl: 'mouth 2.png' },
+                { name: 'Mouth 3', imageUrl: 'mouth 3.png' },
+                { name: 'Mouth 4', imageUrl: 'mouth 4.png' },
+                { name: 'Mouth 5', imageUrl: 'mouth 5.png' },
+                { name: 'Mouth 6', imageUrl: 'mouth 6.png' },
+                { name: 'Mouth 7', imageUrl: 'mouth 7.png' },
+                { name: 'Mouth 8', imageUrl: 'mouth 8.png' },
+                { name: 'Mouth 9', imageUrl: 'mouth 9.png' },
+                { name: 'Mouth 10', imageUrl: 'mouth 10.png' },
+                { name: 'Mouth 11', imageUrl: 'mouth 11.png' },
+                { name: 'Mouth 12', imageUrl: 'mouth 12.png' },
+                { name: 'Mouth 13', imageUrl: 'mouth 13.png' },
+                { name: 'Mouth 14', imageUrl: 'mouth 14.png' },
+                { name: 'Mouth 15', imageUrl: 'mouth 15.png' },
+                { name: 'Mouth 16', imageUrl: 'mouth 16.png' },
+                { name: 'Mouth 17', imageUrl: 'mouth 17.png' },
+                { name: 'Mouth 18', imageUrl: 'mouth 18.png' },
+                { name: 'Mouth 19', imageUrl: 'mouth 19.png' },
+                { name: 'Mouth 20', imageUrl: 'mouth 20.png' }
+            ],
+
+            accessories: [
+                { name: 'Accessories 1', imageUrl: 'accessories 1.png' },
+                { name: 'Accessories 2', imageUrl: 'accessories 2.png' },
+                { name: 'Accessories 3', imageUrl: 'accessories 3.png' },
+                { name: 'Accessories 4', imageUrl: 'accessories 4.png' },
+                { name: 'Accessories 5', imageUrl: 'accessories 5.png' },
+                { name: 'Accessories 6', imageUrl: 'accessories 6.png' },
+                { name: 'Accessories 7', imageUrl: 'accessories 7.png' },
+                { name: 'Accessories 8', imageUrl: 'accessories 8.png' },
+                { name: 'Accessories 9', imageUrl: 'accessories 9.png' },
+                { name: 'Accessories 10', imageUrl: 'accessories 10.png' },
+                { name: 'Accessories 11', imageUrl: 'accessories 11.png' },
+                { name: 'Accessories 12', imageUrl: 'accessories 12.png' },
+                { name: 'Accessories 13', imageUrl: 'accessories 13.png' },
+                { name: 'Accessories 14', imageUrl: 'accessories 14.png' },
+                { name: 'Accessories 15', imageUrl: 'accessories 15.png' },
+                { name: 'Accessories 16', imageUrl: 'accessories 16.png' },
+                { name: 'Accessories 17', imageUrl: 'accessories 17.png' },
+                { name: 'Accessories 18', imageUrl: 'accessories 18.png' },
+                { name: 'Accessories 19', imageUrl: 'accessories 19.png' },
+                { name: 'Accessories 20', imageUrl: 'accessories 20.png' }
+            ],
+
+            flags: [
+                { name: 'Flag 1', imageUrl: 'Flag 1.png' },
+                { name: 'Flag 2', imageUrl: 'Flag 2.png' },
+                { name: 'Flag 3', imageUrl: 'Flag 3.png' },
+                { name: 'Flag 4', imageUrl: 'Flag 4.png' },
+                { name: 'Flag 5', imageUrl: 'Flag 5.png' },
+                { name: 'Flag 6', imageUrl: 'Flag 6.png' },
+                { name: 'Flag 7', imageUrl: 'Flag 7.png' },
+                { name: 'Flag 8', imageUrl: 'Flag 8.png' },
+                { name: 'Flag 9', imageUrl: 'Flag 9.png' },
+                { name: 'Flag 10', imageUrl: 'Flag 10.png' },
+                { name: 'Flag 11', imageUrl: 'Flag 11.png' },
+                { name: 'Flag 12', imageUrl: 'Flag 12.png' },
+                { name: 'Flag 13', imageUrl: 'Flag 13.png' },
+                { name: 'Flag 14', imageUrl: 'Flag 14.png' },
+                { name: 'Flag 15', imageUrl: 'Flag 15.png' },
+                { name: 'Flag 16', imageUrl: 'Flag 16.png' },
+                { name: 'Flag 17', imageUrl: 'Flag 17.png' },
+                { name: 'Flag 18', imageUrl: 'Flag 18.png' },
+                { name: 'Flag 19', imageUrl: 'Flag 19.png' },
+                { name: 'Flag 20', imageUrl: 'Flag 20.png' },
+                { name: 'Flag 21', imageUrl: 'Flag 21.png' },
+                { name: 'Flag 22', imageUrl: 'Flag 22.png' },
+                { name: 'Flag 23', imageUrl: 'Flag 23.png' },
+                { name: 'Flag 24', imageUrl: 'Flag 24.png' },
+                { name: 'Flag 25', imageUrl: 'Flag 25.png' }
+            ],
+
+            magnitude: [
+                { name: 'Badge 1', imageUrl: 'Mag 1.png' },
+                { name: 'Badge 2', imageUrl: 'Mag 2.png' },
+                { name: 'Badge 3', imageUrl: 'Mag 3.png' },
+                { name: 'Badge 4', imageUrl: 'Mag 4.png' },
+                { name: 'Badge 5', imageUrl: 'Mag 5.png' },
+                { name: 'Badge 6', imageUrl: 'Mag 6.png' },
+                { name: 'Badge 7', imageUrl: 'Mag 7.png' },
+                { name: 'Badge 8', imageUrl: 'Mag 8.png' },
+                { name: 'Badge 9', imageUrl: 'Mag 9.png' },
+                { name: 'Leader', imageUrl: 'Leader.png' },
+                { name: 'Mod', imageUrl: 'Mod.png' }
+            ],
+
+            bodyparts: [
+                { name: 'Right Shoulder', imageUrl: 'Right shoulder.png' },
+                { name: 'Left Shoulder', imageUrl: 'Left shoulder.png' },
+                { name: 'Right Arm', imageUrl: 'Right arm.png' },
+                { name: 'Left Arm', imageUrl: 'Left arm.png' }
+            ]
+        };
+
+        // --------------------------------------------------------------
+        // LOAD ROCKY
+        // --------------------------------------------------------------
+        const DEFAULT_ROCKY_URL = 'rocky_base.png';
+
+        function loadRockyFromURL(url, label = url) {
+            if (baseImage) {
+                canvas.remove(baseImage);
+                baseImage = null;
+            }
+
+            fabric.Image.fromURL(url, (img) => {
+                if (!img || !img.width) {
+                    console.error('❌ Default Rocky not found:', label);
+                    return;
+                }
+
+                const scale = Math.min(
+                    (CANVAS_SIZE * 0.85) / img.width,
+                    (CANVAS_SIZE * 0.85) / img.height
+                );
+                img.scale(scale);
+
+                img.set({
+                    left: CANVAS_SIZE / 2,
+                    top: CANVAS_SIZE,
+                    originX: 'center',
+                    originY: 'bottom',
+                    selectable: false,
+                    evented: false,
+                    hasControls: false,
+                    hasBorders: false,
+                    lockMovementX: true,
+                    lockMovementY: true
+                });
+
+                baseImage = img;
+                canvas.add(img);
+                canvas.renderAll();
+            }, 
+            () => {
+                console.error('❌ Failed to load Rocky image:', label);
+            });
+        }
+
+        // --------------------------------------------------------------
+        // INTERFACE
+        // --------------------------------------------------------------
+        function loadCategoryTabs() {
+            const tabsContainer = document.getElementById('categoryTabs');
+            tabsContainer.innerHTML = '';
+            
+            const categories = [
+                { id: 'backgrounds', label: '🎨 Backgrounds' },
+                { id: 'hair', label: '💇 Hair' },
+                { id: 'eyes', label: '👁️ Eyes' },
+                { id: 'mouth', label: '👄 Mouth' },
+                { id: 'accessories', label: '🎩 Accessories' },
+                { id: 'flags', label: '🚩 Flags' },
+                { id: 'magnitude', label: '🏅 Badges' },
+                { id: 'bodyparts', label: '💪 Body Parts' }
+            ];
+            
+            categories.forEach(cat => {
+                const tab = document.createElement('div');
+                tab.className = 'category-tab' + (cat.id === currentCategory ? ' active' : '');
+                tab.textContent = cat.label;
+                tab.onclick = () => switchCategory(cat.id);
+                tabsContainer.appendChild(tab);
+            });
+        }
+
+        function switchCategory(categoryId) {
+            currentCategory = categoryId;
+            loadCategoryTabs();
+            loadAssetGrid();
+        }
+
+        function loadAssetGrid() {
+            const grid = document.getElementById('assetGrid');
+            grid.innerHTML = '';
+            
+            grid.setAttribute('data-category', currentCategory);
+            
+            const assets = ASSETS[currentCategory] || [];
+            
+            assets.forEach((asset, index) => {
+                const item = document.createElement('div');
+                item.className = 'asset-item';
+                item.dataset.assetIndex = index;
+                
+                const img = document.createElement('img');
+                const src = currentCategory === 'backgrounds'
+                    ? asset.imageUrl
+                    : (asset.imageUrl.includes(' ') ? encodeURI(asset.imageUrl) : asset.imageUrl);
+                img.src = src;
+                img.alt = asset.name;
+                img.style.objectFit = currentCategory === 'backgrounds' ? 'cover' : 'contain';
+                img.onerror = function() {
+                    this.src = currentCategory === 'backgrounds'
+                        ? 'https://placehold.co/200x200/CCCCCC/2D3142?text=BG'
+                        : 'https://placehold.co/200x200/CCCCCC/2D3142?text=Missing';
+                };
+                item.appendChild(img);
+                
+                const name = document.createElement('div');
+                name.className = 'asset-name';
+                name.textContent = asset.name.toUpperCase();
+                item.appendChild(name);
+                
+                grid.appendChild(item);
+            });
+        }
+
+        // --------------------------------------------------------------
+        // CLICK DELEGATION
+        // --------------------------------------------------------------
+        document.getElementById('assetGrid').addEventListener('click', (e) => {
+            const assetItem = e.target.closest('.asset-item');
+            if (!assetItem) return;
+            
+            const index = assetItem.dataset.assetIndex;
+            if (index === undefined) return;
+            
+            const assets = ASSETS[currentCategory];
+            if (!assets) return;
+            
+            const asset = assets[parseInt(index)];
+            if (!asset) return;
+            
+            if (currentCategory === 'backgrounds') {
+                addBackgroundToCanvas(asset);
+            } else {
+                addAssetToCanvas(asset);
+            }
+        });
+
+        // --------------------------------------------------------------
+        // ADD OBJECTS
+        // --------------------------------------------------------------
+        function addBackgroundToCanvas(bgAsset) {
+            const objects = canvas.getObjects();
+            objects.forEach(obj => {
+                if (obj.isBackground) canvas.remove(obj);
+            });
+            
+            const url = bgAsset.imageUrl.includes(' ') ? encodeURI(bgAsset.imageUrl) : bgAsset.imageUrl;
+            
+            fabric.Image.fromURL(url, (img) => {
+                if (!img || !img.width) {
+                    console.error('❌ Failed to load background:', bgAsset.name);
+                    return;
+                }
+                
+                img.scaleToWidth(CANVAS_SIZE);
+                img.scaleToHeight(CANVAS_SIZE);
+                
+                img.set({
+                    left: 0,
+                    top: 0,
+                    originX: 'left',
+                    originY: 'top',
+                    selectable: false,
+                    evented: false,
+                    isBackground: true,
+                    scaleX: CANVAS_SIZE / img.width,
+                    scaleY: CANVAS_SIZE / img.height
+                });
+                
+                canvas.add(img);
+                canvas.sendToBack(img);
+                
+                if (baseImage) {
+                    canvas.moveTo(baseImage, 1);
+                }
+                
+                canvas.renderAll();
+
+                // Recalcule la couleur du nickname selon le nouveau background
+                if (nicknameObj) {
+                    canvas.bringToFront(nicknameObj);
+                    setTimeout(updateNicknameColor, 50);
+                }
+            }, (err) => {
+                console.error('❌ Error loading background:', bgAsset.imageUrl, err);
+            });
+        }
+
+        function addAssetToCanvas(asset) {
+            const url = asset.imageUrl.includes(' ') ? encodeURI(asset.imageUrl) : asset.imageUrl;
+            
+            fabric.Image.fromURL(url, (img) => {
+                if (!img || !img.width) {
+                    console.error('❌ Failed to load asset:', asset.name);
+                    return;
+                }
+                
+                const scale = Math.min(150 / img.width, 150 / img.height);
+                img.scale(scale);
+                
+                img.set({
+                    left: CANVAS_SIZE / 2 + (Math.random() - 0.5) * 200,
+                    top: CANVAS_SIZE / 2 + (Math.random() - 0.5) * 200,
+                    originX: 'center',
+                    originY: 'center',
+                    borderColor: '#FF6B35',
+                    cornerColor: '#FF6B35',
+                    cornerStyle: 'circle',
+                    transparentCorners: false,
+                    cornerSize: 12,
+                    borderScaleFactor: 2,
+                    rotatingPointOffset: 30
+                });
+                
+                canvas.add(img);
+                canvas.setActiveObject(img);
+                canvas.renderAll();
+            }, 
+            (err) => {
+                console.error('❌ Error loading image:', asset.imageUrl, err);
+                alert(`Failed to load image: ${asset.name}\nCheck that the file exists in the correct location.`);
+            });
+        }
+
+        // --------------------------------------------------------------
+        // LAYER CONTROLS
+        // --------------------------------------------------------------
+        function bringForward() {
+            const activeObject = canvas.getActiveObject();
+            if (activeObject && activeObject !== baseImage && !activeObject.isBackground && !activeObject.isNickname) {
+                canvas.bringForward(activeObject);
+                canvas.renderAll();
+            } else {
+                alert('Please select an asset (not Rocky or background) to bring forward.');
+            }
+        }
+
+        function sendBackward() {
+            const activeObject = canvas.getActiveObject();
+            if (activeObject && activeObject !== baseImage && !activeObject.isBackground && !activeObject.isNickname) {
+                canvas.sendBackwards(activeObject);
+                canvas.renderAll();
+            } else {
+                alert('Please select an asset (not Rocky or background) to send backward.');
+            }
+        }
+
+        // --------------------------------------------------------------
+        // EVENTS
+        // --------------------------------------------------------------
+        // --------------------------------------------------------------
+        // HELPER — génère le dataURL du canvas proprement
+        // --------------------------------------------------------------
+        function getCanvasDataURL() {
+            canvas.discardActiveObject();
+            canvas.renderAll();
+            // multiplier:1 car le canvas interne est déjà 1024×1024
+            return canvas.toDataURL({ format: 'png', quality: 1, multiplier: 1 });
+        }
+
+        // --------------------------------------------------------------
+        // EVENTS
+        // --------------------------------------------------------------
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            try {
+                const dataURL = getCanvasDataURL();
+                const link = document.createElement('a');
+                link.download = `rocky-${Date.now()}.png`;
+                link.href = dataURL;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (e) {
+                alert('Download failed — this can happen if assets are loaded from a local file system with CORS restrictions. Try running the site from a local server.');
+                console.error(e);
+            }
+        });
+
+        document.getElementById('shareBtn').addEventListener('click', () => {
+            // Tente de télécharger l'image (peut échouer en file:// à cause des CORS)
+            try {
+                const dataURL = getCanvasDataURL();
+                const link = document.createElement('a');
+                link.download = `rocky-${Date.now()}.png`;
+                link.href = dataURL;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (e) {
+                console.warn('Image export failed (likely CORS on file://):', e);
+            }
+
+            // Ouvre X dans tous les cas
+            setTimeout(() => {
+                const text = encodeURIComponent('Check out my Rocky! 🗿 #SeismicRocky #Seismic');
+                window.open(`https://x.com/intent/tweet?text=${text}&url=https://x.com/Math_FTN74/status/2003229670272025066`, '_blank');
+            }, 400);
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            if (confirm('Clear all items? This action is irreversible.')) {
+                const objects = canvas.getObjects();
+                objects.forEach(obj => {
+                    if (obj !== baseImage) canvas.remove(obj);
+                });
+                nicknameObj = null;
+                canvas.renderAll();
+            }
+        });
+
+        document.getElementById('bringForwardBtn').addEventListener('click', bringForward);
+        document.getElementById('sendBackwardBtn').addEventListener('click', sendBackward);
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 'Delete' || e.key === 'Backspace') && document.activeElement.tagName !== 'INPUT') {
+                const activeObject = canvas.getActiveObject();
+                if (activeObject && activeObject !== baseImage && !activeObject.isBackground && !activeObject.isNickname) {
+                    canvas.remove(activeObject);
+                    canvas.renderAll();
+                    e.preventDefault();
+                }
+            }
+        });
+
+        // --------------------------------------------------------------
+        // NICKNAME SYSTEM
+        // --------------------------------------------------------------
+
+        // Calcule la luminance moyenne d'un background Fabric (image)
+        // en rendant le canvas dans un canvas 2D off-screen et en échantillonnant
+        function getBackgroundLuminance() {
+            return new Promise((resolve) => {
+                const bgObj = canvas.getObjects().find(o => o.isBackground);
+                if (!bgObj) { resolve(1); return; } // pas de bg = fond blanc
+
+                // Render le canvas Fabric dans un canvas temporaire 64x64
+                const size = 64;
+                const offscreen = document.createElement('canvas');
+                offscreen.width  = size;
+                offscreen.height = size;
+                const ctx = offscreen.getContext('2d');
+
+                // On dessine uniquement le background à l'échelle réduite
+                const fabricCanvas = canvas.getElement();
+                ctx.drawImage(fabricCanvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, 0, 0, size, size);
+
+                const data = ctx.getImageData(0, 0, size, size).data;
+                let total = 0;
+                const pixels = size * size;
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i], g = data[i+1], b = data[i+2];
+                    // Luminance relative (formule perceptuelle)
+                    total += (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+                }
+                resolve(total / pixels);
+            });
+        }
+
+        async function updateNicknameColor() {
+            if (!nicknameObj) return;
+            const lum = await getBackgroundLuminance();
+            // Blanc/gris clair (luminance très haute et peu saturé) → noir, sinon → blanc
+            const isNeutralLight = lum > 0.80;
+            const textColor   = isNeutralLight ? '#111111' : '#FFFFFF';
+            const strokeColor = isNeutralLight ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.55)';
+            nicknameObj.set({
+                fill:        textColor,
+                stroke:      strokeColor,
+                strokeWidth: 6,
+                paintFirst:  'stroke',
+                shadow: new fabric.Shadow({
+                    color:   isNeutralLight ? 'rgba(0,0,0,0.25)' : 'rgba(0,0,0,0.5)',
+                    blur:    8,
+                    offsetX: 2,
+                    offsetY: 2
+                })
+            });
+            canvas.renderAll();
+        }
+
+        function applyNickname() {
+            const text = document.getElementById('nicknameInput').value.trim();
+            if (!text) return;
+
+            if (nicknameObj) {
+                canvas.remove(nicknameObj);
+                nicknameObj = null;
+            }
+
+            const MARGIN = 32;
+            nicknameObj = new fabric.Text(text, {
+                left:        CANVAS_SIZE - MARGIN,
+                top:         CANVAS_SIZE - MARGIN,
+                originX:     'right',
+                originY:     'bottom',
+                fontSize:    52,
+                fontFamily:  'Nunito',
+                fontWeight:  '900',
+                fill:        '#FFFFFF',
+                stroke:      'rgba(0,0,0,0.55)',
+                strokeWidth: 6,
+                paintFirst:  'stroke',
+                shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.5)', blur: 8, offsetX: 2, offsetY: 2 }),
+                selectable:    false,
+                evented:       false,
+                hasControls:   false,
+                hasBorders:    false,
+                lockMovementX: true,
+                lockMovementY: true,
+                isNickname:    true
+            });
+
+            canvas.add(nicknameObj);
+            canvas.bringToFront(nicknameObj);
+            canvas.renderAll();
+            updateNicknameColor();
+        }
+
+        document.getElementById('applyNicknameBtn').addEventListener('click', applyNickname);
+        document.getElementById('nicknameInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') applyNickname();
+        });
+
+        // Recalculer la couleur du nickname à chaque ajout de background
+        const _origAddBg = addBackgroundToCanvas;
+        // Override via wrapping (on patchera après le chargement du bg)
+
+        // --------------------------------------------------------------
+        // INIT
+        // --------------------------------------------------------------
+        loadCategoryTabs();
+        loadAssetGrid();
+        loadRockyFromURL(DEFAULT_ROCKY_URL, 'rocky_base.png');
+
+        // --------------------------------------------------------------
+        // OVERLAY POSITIONING — ancré sur le coin haut-gauche du canvas-wrapper
+        // --------------------------------------------------------------
+        const overlayImg = document.getElementById('siteOverlay');
+        const canvasWrapperEl = document.querySelector('.canvas-wrapper');
+
+        // OVERLAY_SCALE : largeur de l'overlay = N * largeur du canvas-wrapper rendu
+        const OVERLAY_SCALE = 0.35;   // ajuste pour changer la taille du perso
+        const OFFSET_X_PX = -173;      // décalage en pixels vers la gauche depuis le coin du cadre
+        const OFFSET_Y_PX = -167;      // décalage en pixels vers le haut depuis le coin du cadre
+
+        function positionOverlay() {
+            const rect = canvasWrapperEl.getBoundingClientRect();
+            const w = rect.width * OVERLAY_SCALE;
+            const x = rect.left + OFFSET_X_PX;
+            const y = rect.top  + OFFSET_Y_PX;
+
+            overlayImg.style.width  = w + 'px';
+            overlayImg.style.height = 'auto';
+            overlayImg.style.left   = x + 'px';
+            overlayImg.style.top    = y + 'px';
+        }
+
+        // Attendre que l'image overlay soit chargée pour éviter un flash
+        overlayImg.onload = positionOverlay;
+        if (overlayImg.complete) positionOverlay();
+
+        window.addEventListener('resize', positionOverlay);
+        // Sur scroll, le canvas bouge dans le viewport donc on recalcule
+        window.addEventListener('scroll', positionOverlay, { passive: true });
+        // Recalcul après les animations de layout (ex: chargement de Rocky)
+        setTimeout(positionOverlay, 500);
+        setTimeout(positionOverlay, 1200);
+    </script>
+</body>
+</html>
