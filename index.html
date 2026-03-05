@@ -971,83 +971,55 @@
             objects.forEach(obj => {
                 if (obj.isBackground) canvas.remove(obj);
             });
-            
-            const url = bgAsset.imageUrl.includes(' ') ? encodeURI(bgAsset.imageUrl) : bgAsset.imageUrl;
-            
-            fabric.Image.fromURL(url, (img) => {
-                if (!img || !img.width) {
-                    console.error('❌ Failed to load background:', bgAsset.name);
-                    return;
-                }
-                
-                img.scaleToWidth(CANVAS_SIZE);
-                img.scaleToHeight(CANVAS_SIZE);
-                
-                img.set({
-                    left: 0,
-                    top: 0,
-                    originX: 'left',
-                    originY: 'top',
-                    selectable: false,
-                    evented: false,
-                    isBackground: true,
-                    scaleX: CANVAS_SIZE / img.width,
-                    scaleY: CANVAS_SIZE / img.height
-                });
-                
-                canvas.add(img);
-                canvas.sendToBack(img);
-                
-                if (baseImage) {
-                    canvas.moveTo(baseImage, 1);
-                }
-                
-                canvas.renderAll();
 
-                // Recalcule la couleur du nickname selon le nouveau background
-                if (nicknameObj) {
-                    canvas.bringToFront(nicknameObj);
-                    setTimeout(updateNicknameColor, 50);
-                }
-            }, (err) => {
-                console.error('❌ Error loading background:', bgAsset.imageUrl, err);
-            }, { crossOrigin: 'anonymous' });
+            const url = bgAsset.imageUrl;
+            toBase64(url).then(dataUrl => {
+                fabric.Image.fromURL(dataUrl, (img) => {
+                    if (!img || !img.width) return;
+                    img.set({
+                        left: 0, top: 0,
+                        originX: 'left', originY: 'top',
+                        selectable: false, evented: false,
+                        isBackground: true,
+                        scaleX: CANVAS_SIZE / img.width,
+                        scaleY: CANVAS_SIZE / img.height
+                    });
+                    canvas.add(img);
+                    canvas.sendToBack(img);
+                    if (baseImage) canvas.moveTo(baseImage, 1);
+                    canvas.renderAll();
+                    if (nicknameObj) {
+                        canvas.bringToFront(nicknameObj);
+                        setTimeout(updateNicknameColor, 50);
+                    }
+                });
+            }).catch(err => console.error('❌ Background load failed:', err));
         }
 
         function addAssetToCanvas(asset) {
-            const url = asset.imageUrl.includes(' ') ? encodeURI(asset.imageUrl) : asset.imageUrl;
-            
-            fabric.Image.fromURL(url, (img) => {
-                if (!img || !img.width) {
-                    console.error('❌ Failed to load asset:', asset.name);
-                    return;
-                }
-                
-                const scale = Math.min(150 / img.width, 150 / img.height);
-                img.scale(scale);
-                
-                img.set({
-                    left: CANVAS_SIZE / 2 + (Math.random() - 0.5) * 200,
-                    top: CANVAS_SIZE / 2 + (Math.random() - 0.5) * 200,
-                    originX: 'center',
-                    originY: 'center',
-                    borderColor: '#FF6B35',
-                    cornerColor: '#FF6B35',
-                    cornerStyle: 'circle',
-                    transparentCorners: false,
-                    cornerSize: 12,
-                    borderScaleFactor: 2,
-                    rotatingPointOffset: 30
+            const url = asset.imageUrl;
+            toBase64(url).then(dataUrl => {
+                fabric.Image.fromURL(dataUrl, (img) => {
+                    if (!img || !img.width) return;
+                    const scale = Math.min(150 / img.width, 150 / img.height);
+                    img.scale(scale);
+                    img.set({
+                        left: CANVAS_SIZE / 2 + (Math.random() - 0.5) * 200,
+                        top:  CANVAS_SIZE / 2 + (Math.random() - 0.5) * 200,
+                        originX: 'center', originY: 'center',
+                        borderColor: '#FF6B35', cornerColor: '#FF6B35',
+                        cornerStyle: 'circle', transparentCorners: false,
+                        cornerSize: 12, borderScaleFactor: 2,
+                        rotatingPointOffset: 30
+                    });
+                    canvas.add(img);
+                    canvas.setActiveObject(img);
+                    canvas.renderAll();
                 });
-                
-                canvas.add(img);
-                canvas.setActiveObject(img);
-                canvas.renderAll();
-            }, 
-            (err) => {
-                console.error('❌ Error loading image:', asset.imageUrl, err);
-                alert(`Failed to load image: ${asset.name}\nCheck that the file exists in the correct location.`);
-            }, { crossOrigin: 'anonymous' });
+            }).catch(err => {
+                console.error('❌ Asset load failed:', err);
+                alert(`Failed to load: ${asset.name}`);
+            });
         }
 
         // --------------------------------------------------------------
@@ -1077,23 +1049,41 @@
         // EVENTS
         // --------------------------------------------------------------
         // --------------------------------------------------------------
-        // HELPER — export canvas en PNG via le canvas DOM natif
-        // Contourne le bug "tainted canvas" de Fabric.js avec images cross-origin
+        // HELPER — charge une URL et la convertit en base64 data URL
+        // Évite complètement le problème de "tainted canvas"
+        // --------------------------------------------------------------
+        function toBase64(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => {
+                    const c = document.createElement('canvas');
+                    c.width = img.naturalWidth;
+                    c.height = img.naturalHeight;
+                    c.getContext('2d').drawImage(img, 0, 0);
+                    try {
+                        resolve(c.toDataURL('image/png'));
+                    } catch(e) {
+                        reject(e);
+                    }
+                };
+                img.onerror = reject;
+                // Cache-bust pour forcer le header CORS
+                img.src = url + (url.includes('?') ? '&' : '?') + '_cb=' + Date.now();
+            });
+        }
+
+        // --------------------------------------------------------------
+        // HELPER — export canvas
         // --------------------------------------------------------------
         function getCanvasDataURL() {
             canvas.discardActiveObject();
             canvas.renderAll();
-
-            // Récupère le vrai HTMLCanvasElement sous Fabric
             const fabricEl = canvas.getElement();
-
-            // Recopie dans un canvas temporaire de même taille
             const tmp = document.createElement('canvas');
             tmp.width  = fabricEl.width;
             tmp.height = fabricEl.height;
-            const ctx = tmp.getContext('2d');
-            ctx.drawImage(fabricEl, 0, 0);
-
+            tmp.getContext('2d').drawImage(fabricEl, 0, 0);
             return tmp.toDataURL('image/png');
         }
 
