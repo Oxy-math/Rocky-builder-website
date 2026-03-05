@@ -434,8 +434,10 @@
                 border-radius: 12px;
                 padding: 12px;
                 margin-bottom: 8px;
-                /* Empêche tout débordement */
-                overflow: hidden;
+                /* overflow visible pour que le badge flèche des tabs dépasse */
+                overflow: visible;
+                /* Garder l'apparence propre avec clip sur le fond uniquement */
+                background-clip: padding-box;
             }
 
             .panel-title { font-size: 1rem; margin-bottom: 8px; }
@@ -445,36 +447,45 @@
             .category-tabs-wrapper {
                 position: relative;
                 margin-bottom: 10px;
+                /* Laisser dépasser le badge flèche */
+                overflow: visible;
             }
-            /* Dégradé droite — indique qu'il y a d'autres onglets */
+            /* Dégradé droite */
             .category-tabs-wrapper::after {
                 content: '';
                 position: absolute;
                 top: 0; right: 0;
-                width: 48px;
+                width: 52px;
                 height: 100%;
-                background: linear-gradient(to right, transparent, white);
+                background: linear-gradient(to right, transparent, white 80%);
                 pointer-events: none;
                 z-index: 2;
-                border-radius: 0 8px 8px 0;
                 transition: opacity 0.3s;
             }
-            /* Petite flèche animée à droite */
+            /* Badge flèche — cercle orange bien visible */
             .category-tabs-wrapper::before {
-                content: '›';
+                content: '❯';
                 position: absolute;
-                right: 6px;
+                right: -4px;
                 top: 50%;
                 transform: translateY(-50%);
-                font-size: 1.2rem;
-                color: var(--primary);
+                width: 24px;
+                height: 24px;
+                line-height: 24px;
+                text-align: center;
+                font-size: 0.75rem;
+                font-weight: 900;
+                color: white;
+                background: var(--primary);
+                border-radius: 50%;
+                box-shadow: 0 2px 6px rgba(255,107,53,0.5);
                 pointer-events: none;
-                z-index: 3;
-                animation: nudge 1.2s ease-in-out infinite;
+                z-index: 4;
+                animation: nudge 1s ease-in-out infinite;
             }
             @keyframes nudge {
-                0%, 100% { transform: translateY(-50%) translateX(0); opacity: 1; }
-                50%       { transform: translateY(-50%) translateX(4px); opacity: 0.5; }
+                0%, 100% { transform: translateY(-50%) translateX(0); }
+                50%       { transform: translateY(-50%) translateX(3px); }
             }
             .category-tabs {
                 display: flex;
@@ -482,14 +493,14 @@
                 overflow-x: auto;
                 gap: 6px;
                 padding-bottom: 4px;
-                padding-right: 40px; /* espace pour voir le fade */
+                padding-right: 44px;
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none;
             }
             .category-tabs::-webkit-scrollbar { display: none; }
-            /* Quand tout est visible, cacher le fade et la flèche */
+            /* Cacher fade + badge quand tout est scrollé */
             .category-tabs-wrapper.tabs-end::after,
-            .category-tabs-wrapper.tabs-end::before { opacity: 0; pointer-events: none; }
+            .category-tabs-wrapper.tabs-end::before { opacity: 0; }
 
             .category-tab {
                 font-size: 0.75rem;
