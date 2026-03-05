@@ -443,64 +443,63 @@
             .panel-title { font-size: 1rem; margin-bottom: 8px; }
 
             /* Tabs scrollables horizontalement */
-            /* Wrapper pour le fade latéral */
+            /* Wrapper pour les flèches de navigation */
             .category-tabs-wrapper {
                 position: relative;
                 margin-bottom: 10px;
-                /* Laisser dépasser le badge flèche */
-                overflow: visible;
-            }
-            /* Dégradé droite */
-            .category-tabs-wrapper::after {
-                content: '';
-                position: absolute;
-                top: 0; right: 0;
-                width: 52px;
-                height: 100%;
-                background: linear-gradient(to right, transparent, white 80%);
-                pointer-events: none;
-                z-index: 2;
-                transition: opacity 0.3s;
-            }
-            /* Badge flèche — cercle orange bien visible */
-            .category-tabs-wrapper::before {
-                content: '❯';
-                position: absolute;
-                right: -8px;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 36px;
-                height: 36px;
-                line-height: 36px;
-                text-align: center;
-                font-size: 1.1rem;
-                font-weight: 900;
-                color: white;
-                background: var(--primary);
-                border-radius: 50%;
-                box-shadow: 0 3px 10px rgba(255,107,53,0.6);
-                pointer-events: none;
-                z-index: 4;
-                animation: nudge 1s ease-in-out infinite;
-            }
-            @keyframes nudge {
-                0%, 100% { transform: translateY(-50%) translateX(0); }
-                50%       { transform: translateY(-50%) translateX(3px); }
+                display: flex;
+                align-items: center;
+                gap: 6px;
             }
             .category-tabs {
+                flex: 1;
                 display: flex;
                 flex-wrap: nowrap;
                 overflow-x: auto;
                 gap: 6px;
-                padding-bottom: 4px;
-                padding-right: 44px;
+                padding-bottom: 2px;
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none;
+                scroll-behavior: smooth;
             }
             .category-tabs::-webkit-scrollbar { display: none; }
-            /* Cacher fade + badge quand tout est scrollé */
-            .category-tabs-wrapper.tabs-end::after,
-            .category-tabs-wrapper.tabs-end::before { opacity: 0; }
+
+            /* Boutons flèche */
+            .tabs-arrow {
+                flex-shrink: 0;
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                border: none;
+                background: var(--primary);
+                color: white;
+                font-size: 1.1rem;
+                font-weight: 900;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 3px 10px rgba(255,107,53,0.5);
+                transition: transform 0.15s ease, opacity 0.3s ease, background 0.2s ease;
+                z-index: 4;
+                padding: 0;
+                line-height: 1;
+            }
+            .tabs-arrow:active { transform: scale(0.9); }
+            .tabs-arrow:hover  { background: #e5561e; }
+            .tabs-arrow.hidden { opacity: 0; pointer-events: none; }
+            .tabs-arrow-left   { animation: nudgeLeft 1s ease-in-out infinite; }
+            .tabs-arrow-right  { animation: nudgeRight 1s ease-in-out infinite; }
+            @keyframes nudgeRight {
+                0%, 100% { transform: translateX(0); }
+                50%       { transform: translateX(3px); }
+            }
+            @keyframes nudgeLeft {
+                0%, 100% { transform: translateX(0); }
+                50%       { transform: translateX(-3px); }
+            }
+            /* Stopper l'animation pendant le clic */
+            .tabs-arrow:active { animation: none; }
 
             .category-tab {
                 font-size: 0.75rem;
@@ -647,7 +646,9 @@
                 <div class="panel">
                     <h2 class="panel-title">Customize Rocky</h2>
                     <div class="category-tabs-wrapper" id="categoryTabsWrapper">
+                        <button class="tabs-arrow tabs-arrow-left hidden" id="tabsArrowLeft" aria-label="Scroll left">❮</button>
                         <div class="category-tabs" id="categoryTabs"></div>
+                        <button class="tabs-arrow tabs-arrow-right" id="tabsArrowRight" aria-label="Scroll right">❯</button>
                     </div>
                     <div class="asset-grid-wrapper">
                         <div class="asset-grid" id="assetGrid"></div>
@@ -1118,29 +1119,31 @@
 
         document.getElementById('assetGrid').addEventListener('scroll', updateScrollFade, { passive: true });
 
-        // Cacher le fade + flèche des tabs quand on a scrollé jusqu'au bout
-        function updateTabsFade() {
-            const tabs = document.getElementById('categoryTabs');
-            const wrapper = document.getElementById('categoryTabsWrapper');
-            if (!tabs || !wrapper) return;
-            const atEnd = tabs.scrollLeft + tabs.clientWidth >= tabs.scrollWidth - 4;
-            if (atEnd) {
-                wrapper.style.setProperty('--fade-opacity', '0');
-                wrapper.classList.add('tabs-end');
-            } else {
-                wrapper.style.setProperty('--fade-opacity', '1');
-                wrapper.classList.remove('tabs-end');
-            }
+        // Navigation flèches tabs
+        function updateTabsArrows() {
+            const tabs  = document.getElementById('categoryTabs');
+            const btnL  = document.getElementById('tabsArrowLeft');
+            const btnR  = document.getElementById('tabsArrowRight');
+            if (!tabs || !btnL || !btnR) return;
+            btnL.classList.toggle('hidden', tabs.scrollLeft <= 2);
+            btnR.classList.toggle('hidden', tabs.scrollLeft + tabs.clientWidth >= tabs.scrollWidth - 2);
         }
 
-        document.getElementById('categoryTabs').addEventListener('scroll', updateTabsFade, { passive: true });
-        setTimeout(updateTabsFade, 150);
+        document.getElementById('tabsArrowRight').addEventListener('click', () => {
+            document.getElementById('categoryTabs').scrollBy({ left: 150, behavior: 'smooth' });
+        });
+        document.getElementById('tabsArrowLeft').addEventListener('click', () => {
+            document.getElementById('categoryTabs').scrollBy({ left: -150, behavior: 'smooth' });
+        });
+        document.getElementById('categoryTabs').addEventListener('scroll', updateTabsArrows, { passive: true });
+        setTimeout(updateTabsArrows, 150);
 
         // Recalculer après chaque changement de catégorie
         const _origLoadAssetGrid = loadAssetGrid;
         loadAssetGrid = function() {
             _origLoadAssetGrid();
             setTimeout(updateScrollFade, 50);
+            setTimeout(updateTabsArrows, 50);
         };
 
         // ============================================================
