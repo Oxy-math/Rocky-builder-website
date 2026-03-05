@@ -196,7 +196,7 @@
         <div class="share-modal">
             <div class="share-modal-icon">&#128203;</div>
             <h3>Image copied to clipboard!</h3>
-            <p>You just have to paste it on X.</p>
+            <p>You just have to paste it on X.<br>Redirecting in <strong id="shareCountdown">2</strong>s...</p>
             <div class="share-modal-buttons">
                 <button class="btn btn-primary" id="shareModalClose">Got it!</button>
             </div>
@@ -361,17 +361,31 @@
                     document.querySelector('.share-modal p').textContent = 'Your image has been downloaded. Attach it manually to your tweet!';
                 }
 
-                // 2. Afficher la modale
+                // 2. Afficher la modale + compte à rebours
                 document.getElementById('shareModalOverlay').classList.add('open');
-
-                // 3. Ouvrir X après 2 secondes
-                setTimeout(() => {
-                    window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(TWEET_TEXT)}`, '_blank');
-                }, 2000);
+                const cd = document.getElementById('shareCountdown');
+                if (cd) cd.textContent = '2';
+                let count = 2;
+                const interval = setInterval(() => {
+                    count--;
+                    if (cd) cd.textContent = count;
+                    if (count <= 0) {
+                        clearInterval(interval);
+                        document.getElementById('shareModalOverlay').classList.remove('open');
+                        window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(TWEET_TEXT)}`, '_blank');
+                    }
+                }, 1000);
+                // Si l'utilisateur clique "Got it!" avant la fin
+                document.getElementById('shareModalClose')._pendingInterval = interval;
             }, 'image/png');
         });
 
-        document.getElementById('shareModalClose').addEventListener('click', () => { document.getElementById('shareModalOverlay').classList.remove('open'); });
+        document.getElementById('shareModalClose').addEventListener('click', () => {
+            const btn = document.getElementById('shareModalClose');
+            if (btn._pendingInterval) clearInterval(btn._pendingInterval);
+            document.getElementById('shareModalOverlay').classList.remove('open');
+            window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(TWEET_TEXT)}`, '_blank');
+        });
         document.getElementById('shareModalOverlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('open'); });
 
         document.getElementById('clearBtn').addEventListener('click', () => {
