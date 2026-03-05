@@ -1077,13 +1077,24 @@
         // EVENTS
         // --------------------------------------------------------------
         // --------------------------------------------------------------
-        // HELPER — génère le dataURL du canvas proprement
+        // HELPER — export canvas en PNG via le canvas DOM natif
+        // Contourne le bug "tainted canvas" de Fabric.js avec images cross-origin
         // --------------------------------------------------------------
         function getCanvasDataURL() {
             canvas.discardActiveObject();
             canvas.renderAll();
-            // multiplier:1 car le canvas interne est déjà 1024×1024
-            return canvas.toDataURL({ format: 'png', quality: 1, multiplier: 1 });
+
+            // Récupère le vrai HTMLCanvasElement sous Fabric
+            const fabricEl = canvas.getElement();
+
+            // Recopie dans un canvas temporaire de même taille
+            const tmp = document.createElement('canvas');
+            tmp.width  = fabricEl.width;
+            tmp.height = fabricEl.height;
+            const ctx = tmp.getContext('2d');
+            ctx.drawImage(fabricEl, 0, 0);
+
+            return tmp.toDataURL('image/png');
         }
 
         // --------------------------------------------------------------
@@ -1099,8 +1110,7 @@
                 link.click();
                 document.body.removeChild(link);
             } catch (e) {
-                alert('Download failed — this can happen if assets are loaded from a local file system with CORS restrictions. Try running the site from a local server.');
-                console.error(e);
+                console.error('Export failed:', e);
             }
         });
 
