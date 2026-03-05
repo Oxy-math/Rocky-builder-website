@@ -459,36 +459,45 @@
                 overflow-x: hidden;
             }
 
-            /* Header compact */
             .container {
                 padding: 0;
             }
 
+            /* Header centré */
             header {
                 padding: 14px 16px 10px;
                 margin-bottom: 0;
+                text-align: center;
             }
 
             h1 {
-                font-size: 1.55rem;
+                font-size: 1.6rem;
                 text-shadow: 2px 2px 0 var(--accent);
                 letter-spacing: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 6px;
             }
 
-            h1 img { height: 0.75em !important; margin-right: 8px !important; }
+            h1 img {
+                height: 1.2rem !important;
+                margin-right: 0 !important;
+                vertical-align: middle !important;
+            }
 
             .tagline {
                 font-size: 0.85rem;
                 margin-bottom: 0;
+                text-align: center;
             }
 
-            /* Masquer sidebar gauche */
+            /* Masquer sidebar gauche et overlay */
             .left-sidebar { display: none; }
-
-            /* Masquer overlay Rocky (trop petit) */
             .site-overlay { display: none; }
 
-            /* ── Workspace ── */
+            /* Workspace vertical */
             .workspace {
                 display: flex;
                 flex-direction: column;
@@ -496,118 +505,118 @@
                 padding: 0;
             }
 
-            /* ── Canvas section ── */
+            /* Canvas section */
             .canvas-container {
                 border-radius: 0;
-                padding: 10px 12px;
+                padding: 8px;
                 box-shadow: none;
                 border-bottom: 2px solid rgba(255,107,53,0.15);
+                background: white;
             }
 
             .canvas-wrapper {
-                border-radius: 10px;
+                border-radius: 8px;
+                width: 100%;
+                overflow: hidden;
             }
 
-            /* Canvas square, pleine largeur */
-            .canvas-wrapper canvas {
+            /* Force le canvas Fabric à prendre toute la largeur */
+            .canvas-wrapper > canvas,
+            .canvas-wrapper .lower-canvas,
+            .canvas-wrapper .upper-canvas {
                 width: 100% !important;
                 height: auto !important;
-                display: block;
+                display: block !important;
             }
 
-            /* Boutons en grille 2 colonnes */
+            /* Boutons : 2 par ligne */
             .controls {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                gap: 8px;
-                margin-top: 10px;
+                gap: 7px;
+                margin-top: 8px;
             }
 
             .btn {
-                font-size: 0.82rem;
-                padding: 11px 8px;
-                border-radius: 12px;
+                font-size: 0.8rem;
+                padding: 10px 6px;
+                border-radius: 10px;
                 text-align: center;
+                white-space: nowrap;
             }
 
-            /* Share occupe toute la largeur */
-            .btn-share {
-                grid-column: 1 / -1;
-            }
-
-            /* ── Sidebar ── */
+            /* Sidebar */
             .sidebar {
-                padding: 0 12px 16px;
+                padding: 8px 8px 16px;
             }
 
             .sidebar .panel {
                 border-radius: 12px;
                 padding: 12px;
-                margin-bottom: 10px;
-                box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+                margin-bottom: 8px;
             }
 
             .panel-title {
-                font-size: 1.05rem;
-                margin-bottom: 10px;
+                font-size: 1rem;
+                margin-bottom: 8px;
             }
 
-            /* Tabs en scroll horizontal — plus lisibles */
+            /* Tabs scrollables horizontalement */
             .category-tabs {
                 display: flex;
                 flex-wrap: nowrap;
                 overflow-x: auto;
                 gap: 6px;
-                padding-bottom: 6px;
+                padding-bottom: 4px;
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none;
-                margin-bottom: 12px;
+                margin-bottom: 10px;
             }
 
             .category-tabs::-webkit-scrollbar { display: none; }
 
             .category-tab {
-                font-size: 0.78rem;
-                padding: 6px 12px;
+                font-size: 0.75rem;
+                padding: 5px 11px;
                 white-space: nowrap;
                 flex-shrink: 0;
-                border-radius: 20px;
             }
 
-            /* Grille assets — 4 colonnes fluides */
+            /* Grille assets — cellules carrées auto-sizing */
             .asset-grid {
+                display: grid;
                 grid-template-columns: repeat(4, 1fr);
-                gap: 7px;
-                max-height: 220px;
+                gap: 6px;
+                max-height: 230px;
+                padding-right: 0;
             }
 
             .asset-item {
-                width: 100%;
-                height: auto;
-                aspect-ratio: 1;
+                width: 100% !important;
+                height: 0 !important;
+                padding-bottom: 100% !important; /* force carré */
+                position: relative;
             }
 
             .asset-item img {
-                width: 100%;
-                height: 100%;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: contain;
             }
 
             /* Nickname */
-            .nickname-section { margin-top: 12px; }
+            .nickname-section { margin-top: 10px; }
+            .nickname-row { flex-direction: row; gap: 8px; }
+            .nickname-input { font-size: 0.82rem; padding: 8px 12px; }
+            .nickname-btn { padding: 8px 14px; font-size: 0.82rem; }
 
-            .nickname-row {
-                flex-direction: row;
-                gap: 8px;
-            }
-
-            .nickname-input { font-size: 0.85rem; padding: 9px 12px; }
-
-            .nickname-btn { padding: 9px 16px; font-size: 0.85rem; }
-
-            /* Instructions cachées sur mobile */
+            /* Cacher instructions */
             .instructions { display: none; }
 
-            /* Liens sociaux en bas */
+            /* Social bar */
             .mobile-social { display: flex !important; }
         }
 
@@ -1479,6 +1488,32 @@
         loadRockyFromURL(DEFAULT_ROCKY_URL, 'rocky_base.png');
 
         // --------------------------------------------------------------
+        // RESPONSIVE CANVAS SCALING
+        // Scale le canvas Fabric visuellement selon la largeur du wrapper
+        // Le canvas interne reste 1024x1024 pour l'export
+        // --------------------------------------------------------------
+        function scaleCanvasToWrapper() {
+            const wrapper = document.querySelector('.canvas-wrapper');
+            const wrapperWidth = wrapper.clientWidth;
+            if (wrapperWidth >= CANVAS_SIZE) {
+                // Desktop : taille naturelle
+                canvas.setZoom(1);
+                canvas.setWidth(CANVAS_SIZE);
+                canvas.setHeight(CANVAS_SIZE);
+            } else {
+                // Mobile : zoom proportionnel
+                const scale = wrapperWidth / CANVAS_SIZE;
+                canvas.setZoom(scale);
+                canvas.setWidth(wrapperWidth);
+                canvas.setHeight(wrapperWidth); // carré
+            }
+            canvas.renderAll();
+            positionOverlay();
+        }
+
+        window.addEventListener('resize', scaleCanvasToWrapper);
+        setTimeout(scaleCanvasToWrapper, 100);
+
         // OVERLAY POSITIONING — ancré sur le coin haut-gauche du canvas-wrapper
         // --------------------------------------------------------------
         const overlayImg = document.getElementById('siteOverlay');
