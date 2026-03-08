@@ -36,6 +36,9 @@
         .btn-secondary:hover { background: linear-gradient(135deg, #F7931E, #FF6B35); box-shadow: 0 6px 25px rgba(247,147,30,0.35); transform: translateY(-2px); }
         .btn-share { background: #000000; color: white; }
         .btn-share:hover { background: #1a1a1a; box-shadow: 0 6px 25px rgba(0,0,0,0.3); transform: translateY(-2px); }
+        .btn-undo { background: linear-gradient(135deg, #6c757d, #495057); color: white; }
+        .btn-undo:hover { background: linear-gradient(135deg, #495057, #343a40); box-shadow: 0 6px 25px rgba(73,80,87,0.35); transform: translateY(-2px); }
+        .btn-undo:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
         .sidebar { display: flex; flex-direction: column; gap: 20px; }
         .panel { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); animation: slideLeft 0.8s ease-out 0.4s both; overflow: hidden; }
         @keyframes slideLeft { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
@@ -70,12 +73,12 @@
         /* ===== SHARE MODAL ===== */
         .share-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
         .share-modal-overlay.open { display: flex; }
-        .share-modal { background: white; border-radius: 24px; padding: 32px 28px 24px; max-width: 340px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.25); text-align: center; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+        .share-modal { background: white; border-radius: 24px; padding: 32px 28px 24px; max-width: 340px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.25); text-align: center; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1); position: relative; z-index: 10001; }
         @keyframes popIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
         .share-modal-icon { font-size: 3rem; margin-bottom: 12px; line-height: 1; }
         .share-modal h3 { font-family: 'Fredoka', sans-serif; font-size: 1.4rem; color: #1a1a1a; margin-bottom: 10px; }
         .share-modal p { font-size: 0.9rem; color: #555; line-height: 1.6; margin-bottom: 20px; }
-        .share-modal-buttons { display: flex; }
+        .share-modal-buttons { display: flex; flex-direction: column; gap: 10px; }
         .share-modal-buttons .btn { flex: 1; font-size: 0.9rem; padding: 12px 10px; }
         /* ===== TABLET ===== */
         @media (max-width: 1024px) { .workspace { grid-template-columns: 1fr; } h1 { font-size: 2.5rem; } }
@@ -92,7 +95,7 @@
             .workspace { display: flex; flex-direction: column; gap: 0; padding: 0; }
             .canvas-container { border-radius: 0; padding: 8px; box-shadow: none; border-bottom: 2px solid rgba(255,107,53,0.15); background: white; }
             .canvas-wrapper { border-radius: 8px; width: 100%; overflow: hidden; }
-            .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 8px; }
+            .controls { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; margin-top: 8px; }
             .btn { font-size: 0.78rem; padding: 10px 6px; border-radius: 10px; text-align: center; white-space: nowrap; }
             .sidebar { padding: 8px 8px 16px; }
             .sidebar .panel { border-radius: 12px; padding: 12px; margin-bottom: 8px; overflow: visible; background-clip: padding-box; }
@@ -148,11 +151,12 @@
             <div class="canvas-container">
                 <div class="canvas-wrapper"><canvas id="canvas"></canvas></div>
                 <div class="controls">
-                    <button class="btn btn-primary" id="downloadBtn">📥 Download</button>
-                    <button class="btn btn-share" id="shareBtn">𝕏 Share on X</button>
-                    <button class="btn btn-primary" id="clearBtn">↺ Clear All</button>
                     <button class="btn btn-secondary" id="bringForwardBtn">⬆️ Bring Forward</button>
                     <button class="btn btn-secondary" id="sendBackwardBtn">⬇️ Send Backward</button>
+                    <button class="btn btn-undo" id="undoBtn">↩ Undo</button>
+                    <button class="btn btn-primary" id="clearBtn">🗑️ Clear All</button>
+                    <button class="btn btn-primary" id="downloadBtn">📥 Download</button>
+                    <button class="btn btn-share" id="shareBtn">𝕏 Share on X</button>
                 </div>
             </div>
             <div class="sidebar">
@@ -194,11 +198,11 @@
     <!-- SHARE MODAL -->
     <div class="share-modal-overlay" id="shareModalOverlay">
         <div class="share-modal">
-            <div class="share-modal-icon">&#128203;</div>
-            <h3>Image copied to clipboard!</h3>
-            <p>You just have to paste it on X.<br>Redirecting in <strong id="shareCountdown">2</strong>s...</p>
+            <div class="share-modal-icon">📋</div>
+            <h3 id="shareModalTitle">Image copied to clipboard!</h3>
+            <p id="shareModalText">You just have to paste it on X.<br>Redirecting in <strong id="shareCountdown">3</strong>s...</p>
             <div class="share-modal-buttons">
-                <button class="btn btn-primary" id="shareModalClose">Got it!</button>
+                <button class="btn btn-share" id="shareModalClose">Got it! →</button>
             </div>
         </div>
     </div>
@@ -206,6 +210,33 @@
         const CANVAS_SIZE = 1024;
         const canvas = new fabric.Canvas('canvas', { width: CANVAS_SIZE, height: CANVAS_SIZE, preserveObjectStacking: true });
         let baseImage = null, currentCategory = 'backgrounds', nicknameObj = null;
+
+        // ===== UNDO HISTORY =====
+        let undoStack = [];
+        function saveState() {
+            undoStack.push(canvas.toJSON(['isBackground', 'isNickname', 'selectable', 'evented', 'hasControls', 'hasBorders', 'lockMovementX', 'lockMovementY']));
+            if (undoStack.length > 30) undoStack.shift();
+            updateUndoBtn();
+        }
+        function updateUndoBtn() {
+            document.getElementById('undoBtn').disabled = undoStack.length <= 1;
+        }
+        function undoAction() {
+            if (undoStack.length <= 1) return;
+            undoStack.pop(); // remove current
+            const prev = undoStack[undoStack.length - 1];
+            canvas.loadFromJSON(prev, () => {
+                // Restore references
+                baseImage = canvas.getObjects().find(o => !o.isBackground && !o.isNickname && !o.selectable) || null;
+                nicknameObj = canvas.getObjects().find(o => o.isNickname) || null;
+                canvas.renderAll();
+                updateUndoBtn();
+            });
+        }
+        // Save state on meaningful actions
+        canvas.on('object:added', saveState);
+        canvas.on('object:removed', saveState);
+        canvas.on('object:modified', saveState);
 
         const ASSETS = {
             backgrounds: Array.from({length: 55}, (_, i) => ({ name: `Background ${i+1}`, imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background${i+1}.png` })),
@@ -346,45 +377,70 @@
             canvas.getElement().toBlob(async (blob) => {
                 if (!blob) return;
 
-                // 1. Copier l'image dans le presse-papier
-                let copied = false;
+                const text = encodeURIComponent(TWEET_TEXT);
+                const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+                const appUrl = `twitter://post?text=${text}`;
+                const webUrl = `https://x.com/intent/tweet?text=${text}`;
+
+                const closeBtn = document.getElementById('shareModalClose');
+                const titleEl = document.getElementById('shareModalTitle');
+                const textEl = document.getElementById('shareModalText');
+
+                // Tenter clipboard
+                let imageCopied = false;
                 try {
                     await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-                    copied = true;
-                } catch(e) {
-                    // Clipboard non dispo : télécharger en fallback
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.download = `rocky-${Date.now()}.png`; link.href = url;
-                    document.body.appendChild(link); link.click(); document.body.removeChild(link);
-                    setTimeout(() => URL.revokeObjectURL(url), 1000);
-                    document.querySelector('.share-modal p').textContent = 'Your image has been downloaded. Attach it manually to your tweet!';
+                    imageCopied = true;
+                } catch(e) {}
+
+                closeBtn._xUrl = isMobile ? appUrl : webUrl;
+                closeBtn._isMobile = isMobile;
+
+                if (imageCopied) {
+                    titleEl.textContent = 'Image copied to clipboard!';
+                } else {
+                    titleEl.textContent = 'Ready to post!';
                 }
 
-                // 2. Afficher la modale + compte à rebours
                 document.getElementById('shareModalOverlay').classList.add('open');
-                const cd = document.getElementById('shareCountdown');
-                if (cd) cd.textContent = '2';
-                let count = 2;
-                const interval = setInterval(() => {
-                    count--;
-                    if (cd) cd.textContent = count;
-                    if (count <= 0) {
-                        clearInterval(interval);
-                        document.getElementById('shareModalOverlay').classList.remove('open');
-                        window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(TWEET_TEXT)}`, '_blank');
-                    }
-                }, 1000);
-                // Si l'utilisateur clique "Got it!" avant la fin
-                document.getElementById('shareModalClose')._pendingInterval = interval;
+
+                if (isMobile) {
+                    // Mobile : pas de timer, juste le bouton Got it!
+                    textEl.innerHTML = 'Your post text is pre-filled on X.<br>Tap <strong>"Got it!"</strong> then paste your image!';
+                    closeBtn.textContent = 'Got it! →';
+                    closeBtn._interval = null;
+                } else {
+                    // Desktop : countdown + redirection auto
+                    textEl.innerHTML = 'You just have to paste it on X.<br>Redirecting in <strong><span id="shareCountdown">3</span>s</strong>...';
+                    closeBtn.textContent = 'Got it! →';
+                    let count = 3;
+                    const interval = setInterval(() => {
+                        count--;
+                        const el = document.getElementById('shareCountdown');
+                        if (el) el.textContent = count;
+                        if (count <= 0) {
+                            clearInterval(interval);
+                            document.getElementById('shareModalOverlay').classList.remove('open');
+                            window.open(webUrl, '_blank');
+                        }
+                    }, 1000);
+                    closeBtn._interval = interval;
+                }
+
             }, 'image/png');
         });
 
         document.getElementById('shareModalClose').addEventListener('click', () => {
             const btn = document.getElementById('shareModalClose');
-            if (btn._pendingInterval) clearInterval(btn._pendingInterval);
+            if (btn._interval) clearInterval(btn._interval);
             document.getElementById('shareModalOverlay').classList.remove('open');
-            window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(TWEET_TEXT)}`, '_blank');
+            // Vrai clic → Android suit nativement le twitter:// 
+            const a = document.createElement('a');
+            a.href = btn._xUrl || `https://x.com/intent/tweet?text=${encodeURIComponent(TWEET_TEXT)}`;
+            if (!btn._isMobile) a.target = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         });
         document.getElementById('shareModalOverlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('open'); });
 
@@ -396,6 +452,7 @@
         });
         document.getElementById('bringForwardBtn').addEventListener('click', bringForward);
         document.getElementById('sendBackwardBtn').addEventListener('click', sendBackward);
+        document.getElementById('undoBtn').addEventListener('click', undoAction);
         document.addEventListener('keydown', (e) => {
             if ((e.key === 'Delete' || e.key === 'Backspace') && document.activeElement.tagName !== 'INPUT') {
                 const obj = canvas.getActiveObject();
@@ -480,6 +537,7 @@
         loadCategoryTabs();
         loadAssetGrid();
         loadRockyFromURL(DEFAULT_ROCKY_URL);
+        setTimeout(() => { saveState(); updateUndoBtn(); }, 500); // save initial state after Rocky loads
         setTimeout(updateScrollFade, 100);
         setTimeout(updateTabsArrows, 150);
     </script>
