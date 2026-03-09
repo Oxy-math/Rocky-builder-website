@@ -9,7 +9,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root { --primary: #FF6B35; --secondary: #F7931E; --accent: #FDC500; --light: #FFF8F0; --shadow: rgba(255, 107, 53, 0.2); }
-        body { font-family: 'DM Sans', sans-serif; background: url('https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Background_site.png') center center / cover fixed, linear-gradient(135deg, #FFF8F0 0%, #FFE5D9 100%); min-height: 100vh; padding: 20px; color: #2D3142; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: 'DM Sans', sans-serif; background: url('https://oxy-math.github.io/Rocky-builder-website/images/Background_site.png') center center / cover fixed, linear-gradient(135deg, #FFF8F0 0%, #FFE5D9 100%); min-height: 100vh; padding: 20px; color: #2D3142; display: flex; flex-direction: column; align-items: center; }
         .left-sidebar { position: fixed; left: 16px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 12px; z-index: 100; background: rgba(255,255,255,0.85); backdrop-filter: blur(8px); border-radius: 50px; padding: 14px 10px; box-shadow: 0 4px 20px rgba(255,107,53,0.15); border: 1px solid rgba(255,107,53,0.15); }
         .left-sidebar a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: var(--light); color: var(--primary); text-decoration: none; transition: all 0.2s ease; font-size: 1.1rem; }
         .left-sidebar a:hover { background: var(--primary); color: white; transform: scale(1.15); box-shadow: 0 4px 12px var(--shadow); }
@@ -134,7 +134,7 @@
     </style>
 </head>
 <body>
-    <img src="https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Background site Rocky.png" id="siteOverlay" class="site-overlay" aria-hidden="true" alt="">
+    <img src="https://oxy-math.github.io/Rocky-builder-website/images/Background site Rocky.png" id="siteOverlay" class="site-overlay" aria-hidden="true" alt="">
     <div class="left-sidebar">
         <a href="https://x.com/SeismicSys" target="_blank" title="Follow on X"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
         <div class="left-sidebar-divider"></div>
@@ -144,7 +144,7 @@
     </div>
     <div class="container">
         <header>
-            <h1><img src="https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Head.png" alt="Rocky" style="height:0.85em; vertical-align:middle; margin-right:12px; display:inline-block;"> Rocky Builder</h1>
+            <h1><img src="https://oxy-math.github.io/Rocky-builder-website/images/Head.png" alt="Rocky" style="height:0.85em; vertical-align:middle; margin-right:12px; display:inline-block;"> Rocky Builder</h1>
             <p class="tagline"><strong>Customize your Rocky and share it with the world!</strong></p>
         </header>
         <div class="workspace">
@@ -239,17 +239,17 @@
         canvas.on('object:modified', saveState);
 
         const ASSETS = {
-            backgrounds: Array.from({length: 55}, (_, i) => ({ name: `Background ${i+1}`, imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/background${i+1}.png` })),
-            hair: Array.from({length: 30}, (_, i) => ({ name: `Haircut ${i+1}`, imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Haircut ${i+1}.png` })),
-            eyes: Array.from({length: 20}, (_, i) => ({ name: `Eyes ${i+1}`, imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Eyes ${i+1}.png` })),
-            mouth: Array.from({length: 20}, (_, i) => ({ name: `Mouth ${i+1}`, imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mouth ${i+1}.png` })),
-            accessories: Array.from({length: 20}, (_, i) => ({ name: `Accessories ${i+1}`, imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/accessories ${i+1}.png` })),
-            flags: Array.from({length: 25}, (_, i) => ({ name: `Flag ${i+1}`, imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Flag ${i+1}.png` })),
-            magnitude: [ ...Array.from({length: 9}, (_, i) => ({ name: `Badge ${i+1}`, imageUrl: `https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mag ${i+1}.png` })), { name: 'Leader', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Leader.png' }, { name: 'Mod', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Mod.png' } ],
-            bodyparts: [ { name: 'Right Shoulder', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Right shoulder.png' }, { name: 'Left Shoulder', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Left shoulder.png' }, { name: 'Right Arm', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Right arm.png' }, { name: 'Left Arm', imageUrl: 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/Left arm.png' } ]
+            backgrounds: Array.from({length: 55}, (_, i) => ({ name: `Background ${i+1}`, imageUrl: `https://oxy-math.github.io/Rocky-builder-website/images/background${i+1}.png` })),
+            hair: Array.from({length: 30}, (_, i) => ({ name: `Haircut ${i+1}`, imageUrl: `https://oxy-math.github.io/Rocky-builder-website/images/Haircut ${i+1}.png` })),
+            eyes: Array.from({length: 20}, (_, i) => ({ name: `Eyes ${i+1}`, imageUrl: `https://oxy-math.github.io/Rocky-builder-website/images/Eyes ${i+1}.png` })),
+            mouth: Array.from({length: 20}, (_, i) => ({ name: `Mouth ${i+1}`, imageUrl: `https://oxy-math.github.io/Rocky-builder-website/images/Mouth ${i+1}.png` })),
+            accessories: Array.from({length: 20}, (_, i) => ({ name: `Accessories ${i+1}`, imageUrl: `https://oxy-math.github.io/Rocky-builder-website/images/accessories ${i+1}.png` })),
+            flags: Array.from({length: 25}, (_, i) => ({ name: `Flag ${i+1}`, imageUrl: `https://oxy-math.github.io/Rocky-builder-website/images/Flag ${i+1}.png` })),
+            magnitude: [ ...Array.from({length: 9}, (_, i) => ({ name: `Badge ${i+1}`, imageUrl: `https://oxy-math.github.io/Rocky-builder-website/images/Mag ${i+1}.png` })), { name: 'Leader', imageUrl: 'https://oxy-math.github.io/Rocky-builder-website/images/Leader.png' }, { name: 'Mod', imageUrl: 'https://oxy-math.github.io/Rocky-builder-website/images/Mod.png' } ],
+            bodyparts: [ { name: 'Right Shoulder', imageUrl: 'https://oxy-math.github.io/Rocky-builder-website/images/Right shoulder.png' }, { name: 'Left Shoulder', imageUrl: 'https://oxy-math.github.io/Rocky-builder-website/images/Left shoulder.png' }, { name: 'Right Arm', imageUrl: 'https://oxy-math.github.io/Rocky-builder-website/images/Right arm.png' }, { name: 'Left Arm', imageUrl: 'https://oxy-math.github.io/Rocky-builder-website/images/Left arm.png' } ]
         };
 
-        const DEFAULT_ROCKY_URL = 'https://cdn.jsdelivr.net/gh/Oxy-math/Rocky-builder-website@main/images/rocky_base.png';
+        const DEFAULT_ROCKY_URL = 'https://oxy-math.github.io/Rocky-builder-website/images/rocky_base.png';
 
         function loadRockyFromURL(url) {
             if (baseImage) { canvas.remove(baseImage); baseImage = null; }
